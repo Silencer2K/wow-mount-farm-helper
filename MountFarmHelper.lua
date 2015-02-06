@@ -10,86 +10,137 @@ local INSTANCE_MOUNTS = {
     -- Burning Crusade
     sethekk_halls = {
         anzu = {
-            { item = 32768, spell = 41252 },    -- Reins of the Raven Lord
+            level = 70,
+            mounts = {
+                { item = 32768, spell = 41252 },    -- Reins of the Raven Lord
+            },
         },
     },
     karazhan = {
         attumen_the_huntsman = {
-            { item = 30480, spell = 36702 },    -- Fiery Warhorse's Reins
+            level = 70,
+            mounts = {
+                { item = 30480, spell = 36702 },    -- Fiery Warhorse's Reins
+            },
         },
     },
     the_eye = {
         kaelthas_sunstrider = {
-            { item = 32458, spell = 40192 },    -- Ashes of Al'ar
+            level = 70,
+            mounts = {
+                { item = 32458, spell = 40192 },    -- Ashes of Al'ar
+            },
         },
     },
     utgarde_pinnacle = {
         skadi_the_ruthless = {
-            { item = 44151, spell = 59996 },    -- Reins of the Blue Proto-Drake
+            level = 80,
+            mounts = {
+                { item = 44151, spell = 59996 },    -- Reins of the Blue Proto-Drake
+            },
         },
     },
     -- Wrath of the Lich King
     onyxias_lair = {
         onyxia = {
-            { item = 49636, spell = 69395 },    -- Reins of the Onyxian Drake
+            level = 80,
+            mounts = {
+                { item = 49636, spell = 69395 },    -- Reins of the Onyxian Drake
+            },
         },
     },
     the_eye_of_eternity = {
         malygos = {
-            { item = 43952, spell = 59567 },    -- Reins of the Azure Drake
-            { item = 43953, spell = 59568 },    -- Reins of the Blue Drake
+            level = 80,
+            mounts = {
+                { item = 43952, spell = 59567 },    -- Reins of the Azure Drake
+                { item = 43953, spell = 59568 },    -- Reins of the Blue Drake
+            },
         },
     },
     ulduar = {
         yogg_saron = {
-            { item = 45693, spell = 63796 },    -- Mimiron's Head
+            level = 80,
+            mounts = {
+                { item = 45693, spell = 63796 },    -- Mimiron's Head
+            },
         },
     },
     icecrown_citadel = {
         the_lich_king = {
-            { item = 50818, spell = 72286 },    -- Invincible's Reins
+            level = 80,
+            mounts = {
+                { item = 50818, spell = 72286 },    -- Invincible's Reins
+            },
         },
     },
     -- Cataclysm
     throne_of_the_four_winds = {
         alakir = {
-            { item = 63041, spell = 88744 },    -- Reins of the Drake of the South Wind
+            level = 85,
+            mounts = {
+                { item = 63041, spell = 88744 },    -- Reins of the Drake of the South Wind
+            },
         },
     },
     firelands = {
         alysrazor = {
-            { item = 71665, spell = 101542 },   -- Flametalon of Alysrazor
+            level = 85,
+            mounts = {
+                { item = 71665, spell = 101542 },   -- Flametalon of Alysrazor
+            },
         },
         ragnaros = {
-            { item = 69224, spell = 97493 },    -- Smoldering Egg of Millagazor
+            level = 85,
+            mounts = {
+                { item = 69224, spell = 97493 },    -- Smoldering Egg of Millagazor
+            },
         },
     },
     dragon_soul = {
         ultraxion = {
-            { item = 78919, spell = 110039 },   -- Experiment 12-B
+            level = 85,
+            mounts = {
+                { item = 78919, spell = 110039 },   -- Experiment 12-B
+            },
         },
         madness_of_deathwing = {
-            { item = 77067, spell = 107842 },   -- Reins of the Blazing Drake
-            { item = 77069, spell = 107845 },   -- Life-Binder's Handmaiden
+            level = 85,
+            mounts = {
+                { item = 77067, spell = 107842 },   -- Reins of the Blazing Drake
+                { item = 77069, spell = 107845 },   -- Life-Binder's Handmaiden
+            },
         },
     },
     -- Mists of Pandaria
     mogushan_vaults = {
         elegon = {
-            { item = 87777, spell = 127170 },   -- Reins of the Astral Cloud Serpent
+            level = 90,
+            mounts = {
+                { item = 87777, spell = 127170 },   -- Reins of the Astral Cloud Serpent
+            },
         },
     },
     throne_of_thunder = {
         jikun = {
-            { item = 95059, spell = 139448 },   -- Clutch of Ji-Kun
+            level = 90,
+            mounts = {
+                { item = 95059, spell = 139448 },   -- Clutch of Ji-Kun
+            },
         },
         horridon = {
-            { item = 93666, spell = 136471 },   -- Spawn of Horridon
+            level = 90,
+            mounts = {
+                { item = 93666, spell = 136471 },   -- Spawn of Horridon
+            },
         },
     },
     siege_of_orgrimmar = {
         garrosh_hellscream = {
-            { item = 104253, spell = 148417 },  -- Kor'kron Juggernaut
+            level = 90,
+            mounts = {
+                { item = 104253, spell = 148417 },  -- Kor'kron Juggernaut
+            },
         },
     },
 }
@@ -97,17 +148,29 @@ local INSTANCE_MOUNTS = {
 local WORLD_BOSSES_MOUNTS = {
     -- Mists of Pandaria
     galleon = {
-        { item = 89783, spell = 130965 },       -- Son of Galleon's Saddle
+        level = 90,
+        mounts = {
+            { item = 89783, spell = 130965 },       -- Son of Galleon's Saddle
+        },
     },
     oondasta = {
-        { item = 94228, spell = 138423 },       -- Reins of the Cobalt Primordial Direhorn
+        level = 90,
+        mounts = {
+            { item = 94228, spell = 138423 },       -- Reins of the Cobalt Primordial Direhorn
+        },
     },
     nalak = {
-        { item = 95057, spell = 139442 },       -- Reins of the Thundering Cobalt Cloud Serpent
+        level = 90,
+        mounts = {
+            { item = 95057, spell = 139442 },       -- Reins of the Thundering Cobalt Cloud Serpent
+        },
     },
     -- Warlords of Draenor
     rukhmar = {
-        { quest = 37464, item = 116771, spell  = 171828 },      -- Solar Spirehawk
+        level = 100,
+        mounts = {
+            { quest = 37464, item = 116771, spell  = 171828 },      -- Solar Spirehawk
+        },
     },
 }
 
@@ -136,20 +199,22 @@ function addon:OnInitialize()
     local raid, boss, mount
     for raid in pairs(INSTANCE_MOUNTS) do
         for boss in pairs(INSTANCE_MOUNTS[raid]) do
-            for _, mount in pairs(INSTANCE_MOUNTS[raid][boss]) do
+            for _, mount in pairs(INSTANCE_MOUNTS[raid][boss].mounts) do
                 GetItemInfo(mount.item)
             end
         end
     end
 
     for boss in pairs(WORLD_BOSSES_MOUNTS) do
-        for _, mount in pairs(WORLD_BOSSES_MOUNTS[boss]) do
+        for _, mount in pairs(WORLD_BOSSES_MOUNTS[boss].mounts) do
             GetItemInfo(mount.item)
         end
     end
 end
 
 function addon:UpdateTooltip(tooltip)
+    local level = UnitLevel("player")
+
     tooltip:AddLine(string.format("|c%s%s|r", COLOR_WHITE, L.title))
 
     local hasRaids, hasWorldBosses
@@ -170,18 +235,22 @@ function addon:UpdateTooltip(tooltip)
         im[raid] = {}
 
         for boss in pairs(INSTANCE_MOUNTS[raid]) do
-            for _, mount in pairs(INSTANCE_MOUNTS[raid][boss]) do
-                if not mounts[mount.spell] then
-                    im[raid][boss] = 1
+            if INSTANCE_MOUNTS[raid][boss].level <= level then
+                for _, mount in pairs(INSTANCE_MOUNTS[raid][boss].mounts) do
+                    if not mounts[mount.spell] then
+                        im[raid][boss] = 1
+                    end
                 end
             end
         end
     end
 
     for boss in pairs(WORLD_BOSSES_MOUNTS) do
-        for _, mount in pairs(WORLD_BOSSES_MOUNTS[boss]) do
-            if not mounts[mount.spell] and not (mount.quest and IsQuestFlaggedCompleted(mount.quest)) then
-                wm[boss] = 1
+        if WORLD_BOSSES_MOUNTS[boss].level <= level then
+            for _, mount in pairs(WORLD_BOSSES_MOUNTS[boss].mounts) do
+                if not mounts[mount.spell] and not (mount.quest and IsQuestFlaggedCompleted(mount.quest)) then
+                    wm[boss] = 1
+                end
             end
         end
     end
@@ -231,7 +300,7 @@ function addon:UpdateTooltip(tooltip)
 
             tooltip:AddLine(string.format("%s / %s:", L['raid_' .. raid], L['boss_' .. boss]))
 
-            for _, mount in pairs(INSTANCE_MOUNTS[raid][boss]) do
+            for _, mount in pairs(INSTANCE_MOUNTS[raid][boss].mounts) do
                 if not mounts[mount.spell] then
                     local _, link = GetItemInfo(mount.item)
                     if link then
@@ -251,7 +320,7 @@ function addon:UpdateTooltip(tooltip)
 
         tooltip:AddLine(string.format("%s:", L['world_boss_' .. boss]))
 
-        for _, mount in pairs(WORLD_BOSSES_MOUNTS[boss]) do
+        for _, mount in pairs(WORLD_BOSSES_MOUNTS[boss].mounts) do
             if not mounts[mount.spell] then
                 local _, link = GetItemInfo(mount.item)
                 if link then
