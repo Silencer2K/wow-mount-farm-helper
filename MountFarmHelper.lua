@@ -4,6 +4,8 @@ LibStub('AceAddon-3.0'):NewAddon(addon, addonName, 'AceEvent-3.0')
 
 local L = LibStub('AceLocale-3.0'):GetLocale(addonName)
 
+local COLOR_WHITE = 'ffffffff'
+
 local INSTANCE_MOUNTS = {
     -- Burning Crusade
     sethekk_halls = {
@@ -74,12 +76,31 @@ local INSTANCE_MOUNTS = {
 }
 
 function addon:OnInitialize()
-    self:RegisterEvent('PLAYER_ENTERING_WORLD', function(...)
-        addon:PrintAvailable()
-    end)
+    self.db = LibStub('AceDB-3.0'):New(addonName .. 'DB', {
+        profile = {
+            minimap = {
+                hide = false,
+            },
+        },
+    })
+
+    self.ldb = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
+        type = "launcher",
+        text = "Mount Farm Helper",
+        icon = "Interface\\ICONS\\ABILITY_MOUNT_GOLDENGRYPHON",
+        OnTooltipShow = function(...)
+            addon:UpdateTooltip(...)
+        end,
+    });
+
+    self.icon = LibStub("LibDBIcon-1.0")
+    self.icon:Register(addonName, self.ldb, self.db.profile.minimap)
 end
 
-function addon:PrintAvailable()
+function addon:UpdateTooltip(tooltip)
+    tooltip:AddLine(string.format("|c%s%s|r", COLOR_WHITE, L.title))
+
+    local hasRaids, hasWorldBosses
     local i, j, k, v
 
     local mounts = {}
@@ -131,14 +152,30 @@ function addon:PrintAvailable()
     end
 
     for raid in pairs(im) do
-        local rp
+        local rp, bp
         for boss in pairs(im[raid]) do
+            if not hasRaids then
+                tooltip:AddLine(string.format("|c%s%s:|r", COLOR_WHITE, L.title_raids))
+                hasRaids = 1
+            end
+
             if not rp  then
-                print(L['raid_' .. raid])
+                tooltip:AddLine(string.format("%s:", L['raid_' .. raid]))
                 rp = 1
             end
 
-            print('-', L['boss_' .. boss])
+            for _, mount in pairs(INSTANCE_MOUNTS[raid][boss]) do
+                if not mounts[mount.spell] then
+                    local _, link = GetItemInfo(mount.item)
+
+                    if not bp then
+                        tooltip:AddDoubleLine(string.format("%s:", L['boss_' .. boss]), link)
+                        bp = 1
+                    else
+                        tooltip:AddDoubleLine('', link)
+                    end
+                end
+            end
         end
     end
 end
