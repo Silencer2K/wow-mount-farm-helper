@@ -105,6 +105,10 @@ local WORLD_BOSSES_MOUNTS = {
     nalak = {
         { item = 95057, spell = 139442 },       -- Reins of the Thundering Cobalt Cloud Serpent
     },
+    -- Warlords of Draenor
+    rukhmar = {
+        { quest = 37464, item = 116771, spell  = 171828 },      -- Solar Spirehawk
+    },
 }
 
 function addon:OnInitialize()
@@ -176,7 +180,7 @@ function addon:UpdateTooltip(tooltip)
 
     for boss in pairs(WORLD_BOSSES_MOUNTS) do
         for _, mount in pairs(WORLD_BOSSES_MOUNTS[boss]) do
-            if not mounts[mount.spell] then
+            if not mounts[mount.spell] and not (mount.quest and IsQuestFlaggedCompleted(mount.quest)) then
                 wm[boss] = 1
             end
         end
