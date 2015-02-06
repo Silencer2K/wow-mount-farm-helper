@@ -73,6 +73,20 @@ local INSTANCE_MOUNTS = {
             { item = 77069, spell = 107845 },   -- Life-Binder's Handmaiden
         },
     },
+    -- Mists of Pandaria
+    mogushan_vaults = {
+        elegon = {
+            { item = 87777, spell = 127170 },   -- Reins of the Astral Cloud Serpent
+        },
+    },
+    throne_of_thunder = {
+        jikun = {
+            { item = 95059, spell = 139448 },   -- Clutch of Ji-Kun
+        },
+        horridon = {
+            { item = 93666, spell = 136471 },   -- Spawn of Horridon
+        },
+    },
 }
 
 function addon:OnInitialize()
