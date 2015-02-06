@@ -70,73 +70,75 @@ local INSTANCE_MOUNTS = {
             { item = 77067, spell = 107842 },   -- Reins of the Blazing Drake
             { item = 77069, spell = 107845 },   -- Life-Binder's Handmaiden
         },
-    }
-    -- Mists of Pandaria
-    -- Warlords of Draenor
+    },
 }
 
 function addon:OnInitialize()
     self:RegisterEvent('PLAYER_ENTERING_WORLD', function(...)
-        local i, j, k, v
-
-        local mounts = {}
-        for i = 1, C_MountJournal.GetNumMounts() do
-            local _, spell, _, _, _, _, _, _, _, _, collected = C_MountJournal.GetMountInfo(i)
-            if collected then
-                mounts[spell] = 1
-            end
-        end
-
-        local im = {}
-        local raid, boss, mount
-
-        for raid in pairs(INSTANCE_MOUNTS) do
-            im[raid] = {}
-
-            for boss in pairs(INSTANCE_MOUNTS[raid]) do
-                for _, mount in pairs(INSTANCE_MOUNTS[raid][boss]) do
-                    if not mounts[mount.spell] then
-                        im[raid][boss] = 1
-                    end
-                end
-            end
-        end
-
-        local lr, lb = {}, {}
-        for k, v in pairs(L) do
-            if strsub(k, 1, 5) == 'raid_' then
-                lr[v] = strsub(k, 6)
-            elseif strsub(k, 1, 5) == 'boss_' then
-                lb[v] = strsub(k, 6)
-            end
-        end
-
-        for i = 1, GetNumSavedInstances() do
-            local raidName, _, _, _, locked, extended, _, _, _, _, numBosses = GetSavedInstanceInfo(i)
-            raid = lr[raidName]
-
-            if raid and im[raid] and locked and not extended then
-                for j = 1, numBosses do
-                    local bossName, _, killed = GetSavedInstanceEncounterInfo(i, j)
-                    boss = lb[bossName]
-
-                    if boss and im[raid][boss] and killed then
-                        im[raid][boss] = nil
-                    end
-                end
-            end
-        end
-
-        for raid in pairs(im) do
-            local rp
-            for boss in pairs(im[raid]) do
-                if not rp  then
-                    print(L['raid_' .. raid])
-                    rp = 1
-                end
-
-                print('-', L['boss_' .. boss])
-            end
-        end
+        addon:PrintAvailable()
     end)
+end
+
+function addon:PrintAvailable()
+    local i, j, k, v
+
+    local mounts = {}
+    for i = 1, C_MountJournal.GetNumMounts() do
+        local _, spell, _, _, _, _, _, _, _, _, collected = C_MountJournal.GetMountInfo(i)
+        if collected then
+            mounts[spell] = 1
+        end
+    end
+
+    local im = {}
+    local raid, boss, mount
+
+    for raid in pairs(INSTANCE_MOUNTS) do
+        im[raid] = {}
+
+        for boss in pairs(INSTANCE_MOUNTS[raid]) do
+            for _, mount in pairs(INSTANCE_MOUNTS[raid][boss]) do
+                if not mounts[mount.spell] then
+                    im[raid][boss] = 1
+                end
+            end
+        end
+    end
+
+    local lr, lb = {}, {}
+    for k, v in pairs(L) do
+        if strsub(k, 1, 5) == 'raid_' then
+            lr[v] = strsub(k, 6)
+        elseif strsub(k, 1, 5) == 'boss_' then
+            lb[v] = strsub(k, 6)
+        end
+    end
+
+    for i = 1, GetNumSavedInstances() do
+        local raidName, _, _, _, locked, extended, _, _, _, _, numBosses = GetSavedInstanceInfo(i)
+        raid = lr[raidName]
+
+        if raid and im[raid] and locked and not extended then
+            for j = 1, numBosses do
+                local bossName, _, killed = GetSavedInstanceEncounterInfo(i, j)
+                boss = lb[bossName]
+
+                if boss and im[raid][boss] and killed then
+                    im[raid][boss] = nil
+                end
+            end
+        end
+    end
+
+    for raid in pairs(im) do
+        local rp
+        for boss in pairs(im[raid]) do
+            if not rp  then
+                print(L['raid_' .. raid])
+                rp = 1
+            end
+
+            print('-', L['boss_' .. boss])
+        end
+    end
 end
