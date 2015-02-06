@@ -95,6 +95,16 @@ function addon:OnInitialize()
 
     self.icon = LibStub("LibDBIcon-1.0")
     self.icon:Register(addonName, self.ldb, self.db.profile.minimap)
+
+    -- precache
+    local raid, boss, mount
+    for raid in pairs(INSTANCE_MOUNTS) do
+        for boss in pairs(INSTANCE_MOUNTS[raid]) do
+            for _, mount in pairs(INSTANCE_MOUNTS[raid][boss]) do
+                GetItemInfo(mount.item)
+            end
+        end
+    end
 end
 
 function addon:UpdateTooltip(tooltip)
