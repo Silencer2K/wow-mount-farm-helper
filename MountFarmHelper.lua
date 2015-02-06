@@ -94,6 +94,19 @@ local INSTANCE_MOUNTS = {
     },
 }
 
+local WORLD_BOSSES_MOUNTS = {
+    -- Mists of Pandaria
+    galleon = {
+        { item = 89783, spell = 130965 },       -- Son of Galleon's Saddle
+    },
+    oondasta = {
+        { item = 94228, spell = 138423 },       -- Reins of the Cobalt Primordial Direhorn
+    },
+    nalak = {
+        { item = 95057, spell = 139442 },       -- Reins of the Thundering Cobalt Cloud Serpent
+    },
+}
+
 function addon:OnInitialize()
     self.db = LibStub('AceDB-3.0'):New(addonName .. 'DB', {
         profile = {
@@ -124,6 +137,12 @@ function addon:OnInitialize()
             end
         end
     end
+
+    for boss in pairs(WORLD_BOSSES_MOUNTS) do
+        for _, mount in pairs(WORLD_BOSSES_MOUNTS[boss]) do
+            GetItemInfo(mount.item)
+        end
+    end
 end
 
 function addon:UpdateTooltip(tooltip)
@@ -140,7 +159,7 @@ function addon:UpdateTooltip(tooltip)
         end
     end
 
-    local im = {}
+    local im, wm = {}, {}
     local raid, boss, mount
 
     for raid in pairs(INSTANCE_MOUNTS) do
@@ -155,12 +174,22 @@ function addon:UpdateTooltip(tooltip)
         end
     end
 
-    local lr, lb = {}, {}
+    for boss in pairs(WORLD_BOSSES_MOUNTS) do
+        for _, mount in pairs(WORLD_BOSSES_MOUNTS[boss]) do
+            if not mounts[mount.spell] then
+                wm[boss] = 1
+            end
+        end
+    end
+
+    local lr, lb, lw = {}, {}, {}
     for k, v in pairs(L) do
         if strsub(k, 1, 5) == 'raid_' then
             lr[v] = strsub(k, 6)
         elseif strsub(k, 1, 5) == 'boss_' then
             lb[v] = strsub(k, 6)
+        elseif strsub(k, 1, 11) == 'world_boss_' then
+            lw[v] = strsub(k, 12)
         end
     end
 
@@ -180,6 +209,15 @@ function addon:UpdateTooltip(tooltip)
         end
     end
 
+    for i = 1, GetNumSavedWorldBosses() do
+        local bossName = GetSavedWorldBossInfo(i)
+        boss = lw[bossName]
+
+        if boss and iw[boss] then
+            iw[boss] = nil
+        end
+    end
+
     for raid in pairs(im) do
         for boss in pairs(im[raid]) do
             if not hasRaids then
@@ -196,6 +234,25 @@ function addon:UpdateTooltip(tooltip)
                         link = link:gsub('%[', ''):gsub('%]', '')
                         tooltip:AddLine(string.format("    %s", link))
                     end
+                end
+            end
+        end
+    end
+
+    for boss in pairs(wm) do
+        if not hasWorldBosses then
+            tooltip:AddLine(string.format("|c%s%s:|r", COLOR_WHITE, L.title_world_bosses))
+            hasWorldBosses = 1
+        end
+
+        tooltip:AddLine(string.format("%s:", L['world_boss_' .. boss]))
+
+        for _, mount in pairs(WORLD_BOSSES_MOUNTS[boss]) do
+            if not mounts[mount.spell] then
+                local _, link = GetItemInfo(mount.item)
+                if link then
+                    link = link:gsub('%[', ''):gsub('%]', '')
+                    tooltip:AddLine(string.format("    %s", link))
                 end
             end
         end
