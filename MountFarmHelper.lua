@@ -82,7 +82,7 @@ function addon:OnInitialize()
                 hide = false,
             },
         },
-    })
+    }, true)
 
     self.ldb = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
         type = "launcher",
