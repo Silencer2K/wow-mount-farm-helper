@@ -152,28 +152,18 @@ function addon:UpdateTooltip(tooltip)
     end
 
     for raid in pairs(im) do
-        local rp, bp
         for boss in pairs(im[raid]) do
             if not hasRaids then
                 tooltip:AddLine(string.format("|c%s%s:|r", COLOR_WHITE, L.title_raids))
                 hasRaids = 1
             end
 
-            if not rp  then
-                tooltip:AddLine(string.format("%s:", L['raid_' .. raid]))
-                rp = 1
-            end
+            tooltip:AddLine(string.format("%s / %s:", L['raid_' .. raid], L['boss_' .. boss]))
 
             for _, mount in pairs(INSTANCE_MOUNTS[raid][boss]) do
                 if not mounts[mount.spell] then
                     local _, link = GetItemInfo(mount.item)
-
-                    if not bp then
-                        tooltip:AddDoubleLine(string.format("%s:", L['boss_' .. boss]), link)
-                        bp = 1
-                    else
-                        tooltip:AddDoubleLine('', link)
-                    end
+                    tooltip:AddLine(string.format("    %s", link))
                 end
             end
         end
