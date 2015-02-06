@@ -163,7 +163,10 @@ function addon:UpdateTooltip(tooltip)
             for _, mount in pairs(INSTANCE_MOUNTS[raid][boss]) do
                 if not mounts[mount.spell] then
                     local _, link = GetItemInfo(mount.item)
-                    tooltip:AddLine(string.format("    %s", link))
+                    if link then
+                        link = link:gsub('%[', ''):gsub('%]', '')
+                        tooltip:AddLine(string.format("    %s", link))
+                    end
                 end
             end
         end
