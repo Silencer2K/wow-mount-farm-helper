@@ -87,6 +87,11 @@ local INSTANCE_MOUNTS = {
             { item = 93666, spell = 136471 },   -- Spawn of Horridon
         },
     },
+    siege_of_orgrimmar = {
+        garrosh_hellscream = {
+            { item = 104253, spell = 148417 },  -- Kor'kron Juggernaut
+        },
+    },
 }
 
 function addon:OnInitialize()
