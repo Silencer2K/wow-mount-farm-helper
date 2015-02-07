@@ -80,6 +80,35 @@ local INSTANCE_MOUNTS = {
             },
         },
     },
+    vault_of_archavon = {
+        level = 80, ilevel_max = 251,
+        bosses = {
+            koralon_the_flame_watcher = {
+                mounts = {
+                    { item = 43959, spell = 61465, faction = "Alliance" },      -- Reins of the Grand Black War Mammoth (alliance)
+                    { item = 44083, spell = 61467, faction = "Horde" },         -- Reins of the Grand Black War Mammoth (horde)
+                },
+            },
+            emalon_the_storm_watcher = {
+                mounts = {
+                    { item = 43959, spell = 61465, faction = "Alliance" },      -- Reins of the Grand Black War Mammoth (alliance)
+                    { item = 44083, spell = 61467, faction = "Horde" },         -- Reins of the Grand Black War Mammoth (horde)
+                },
+            },
+            archavon_the_stone_watcher = {
+                mounts = {
+                    { item = 43959, spell = 61465, faction = "Alliance" },      -- Reins of the Grand Black War Mammoth (alliance)
+                    { item = 44083, spell = 61467, faction = "Horde" },         -- Reins of the Grand Black War Mammoth (horde)
+                },
+            },
+            toravon_the_ice_watcher = {
+                mounts = {
+                    { item = 43959, spell = 61465, faction = "Alliance" },      -- Reins of the Grand Black War Mammoth (alliance)
+                    { item = 44083, spell = 61467, faction = "Horde" },         -- Reins of the Grand Black War Mammoth (horde)
+                },
+            },
+        },
+    },
     icecrown_citadel = {
         level = 80, ilevel_max = 284,
         bosses = {
@@ -260,6 +289,7 @@ end
 
 function addon:UpdateTooltip(tooltip)
     local level = UnitLevel("player")
+    local faction = UnitFactionGroup("player")
 
     tooltip:AddLine(string.format("|c%s%s|r", COLOR_WHITE, L.title))
 
@@ -283,7 +313,9 @@ function addon:UpdateTooltip(tooltip)
         for boss in pairs(INSTANCE_MOUNTS[raid].bosses) do
             if INSTANCE_MOUNTS[raid].level <= level then
                 for _, mount in pairs(INSTANCE_MOUNTS[raid].bosses[boss].mounts) do
-                    if not mounts[mount.spell] then
+                    if not mounts[mount.spell]
+                        and (not mount.faction or mount.faction == faction)
+                    then
                         im[raid][boss] = 1
                     end
                 end
@@ -294,7 +326,10 @@ function addon:UpdateTooltip(tooltip)
     for boss in pairs(WORLD_BOSSES_MOUNTS) do
         if WORLD_BOSSES_MOUNTS[boss].level <= level then
             for _, mount in pairs(WORLD_BOSSES_MOUNTS[boss].mounts) do
-                if not mounts[mount.spell] and not (mount.quest and IsQuestFlaggedCompleted(mount.quest)) then
+                if not mounts[mount.spell]
+                    and not (mount.quest and IsQuestFlaggedCompleted(mount.quest))
+                    and (not mount.faction or mount.faction == faction)
+                then
                     wm[boss] = 1
                 end
             end
@@ -355,7 +390,9 @@ function addon:UpdateTooltip(tooltip)
             tooltip:AddLine(string.format("%s / %s:", L['raid_' .. raid], L['boss_' .. boss]))
 
             for _, mount in pairs(INSTANCE_MOUNTS[raid].bosses[boss].mounts) do
-                if not mounts[mount.spell] then
+                if not mounts[mount.spell]
+                    and (not mount.faction or mount.faction == faction)
+                then
                     local _, link = GetItemInfo(mount.item)
                     if link then
                         link = link:gsub('%[', ''):gsub('%]', '')
@@ -383,7 +420,9 @@ function addon:UpdateTooltip(tooltip)
         tooltip:AddLine(string.format("%s:", L['world_boss_' .. boss]))
 
         for _, mount in pairs(WORLD_BOSSES_MOUNTS[boss].mounts) do
-            if not mounts[mount.spell] then
+            if not mounts[mount.spell]
+                and (not mount.faction or mount.faction == faction)
+            then
                 local _, link = GetItemInfo(mount.item)
                 if link then
                     link = link:gsub('%[', ''):gsub('%]', '')
