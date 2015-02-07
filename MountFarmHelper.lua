@@ -187,6 +187,12 @@ local INSTANCE_MOUNTS = {
 
 local WORLD_BOSSES_MOUNTS = {
     -- Mists of Pandaria
+    sha_of_anger = {
+        level = 90, ilevel_max = 483,
+        mounts = {
+            { item = 87771, spell = 127158 },       -- Reins of the Heavenly Onyx Cloud Serpent
+        },
+    },
     galleon = {
         level = 90, ilevel_max = 496,
         mounts = {
