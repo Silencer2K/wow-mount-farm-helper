@@ -326,8 +326,8 @@ function addon:UpdateTooltip(tooltip)
         local bossName = GetSavedWorldBossInfo(i)
         boss = lw[bossName]
 
-        if boss and iw[boss] then
-            iw[boss] = nil
+        if boss and wm[boss] then
+            wm[boss] = nil
         end
     end
 
