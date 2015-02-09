@@ -13,7 +13,19 @@ local INSTANCE_MOUNTS = {
         bosses = {
             anzu = {
                 mounts = {
-                    { item = 32768, spell = 41252 },    -- Reins of the Raven Lord
+                    -- Reins of the Raven Lord
+                    { item = 32768, spell = 41252, type = "heroic" },
+                },
+            },
+        },
+    },
+    magisters_terrace = {
+        level = 70, ilevel_max = 125,
+        bosses = {
+            kaelthas_sunstrider = {
+                mounts = {
+                    -- Swift White Hawkstrider
+                    { item = 35513, spell = 46628, type = "heroic" },
                 },
             },
         },
@@ -23,7 +35,8 @@ local INSTANCE_MOUNTS = {
         bosses = {
             attumen_the_huntsman = {
                 mounts = {
-                    { item = 30480, spell = 36702 },    -- Fiery Warhorse's Reins
+                    -- Fiery Warhorse's Reins
+                    { item = 30480, spell = 36702 },
                 },
             },
         },
@@ -33,7 +46,8 @@ local INSTANCE_MOUNTS = {
         bosses = {
             kaelthas_sunstrider = {
                 mounts = {
-                    { item = 32458, spell = 40192 },    -- Ashes of Al'ar
+                    -- Ashes of Al'ar
+                    { item = 32458, spell = 40192 },
                 },
             },
         },
@@ -44,7 +58,8 @@ local INSTANCE_MOUNTS = {
         bosses = {
             skadi_the_ruthless = {
                 mounts = {
-                    { item = 44151, spell = 59996 },    -- Reins of the Blue Proto-Drake
+                    -- Reins of the Blue Proto-Drake
+                    { item = 44151, spell = 59996, type = "heroic" },
                 },
             },
         },
@@ -54,8 +69,10 @@ local INSTANCE_MOUNTS = {
         bosses = {
             malygos = {
                 mounts = {
-                    { item = 43952, spell = 59567 },    -- Reins of the Azure Drake
-                    { item = 43953, spell = 59568 },    -- Reins of the Blue Drake
+                    -- Reins of the Azure Drake
+                    { item = 43952, spell = 59567 },
+                    -- Reins of the Blue Drake
+                    { item = 43953, spell = 59568 },
                 },
             },
         },
@@ -65,7 +82,8 @@ local INSTANCE_MOUNTS = {
         bosses = {
             yogg_saron = {
                 mounts = {
-                    { item = 45693, spell = 63796 },    -- Mimiron's Head
+                    -- Mimiron's Head
+                    { item = 45693, spell = 63796, type = "heroic" },
                 },
             },
         },
@@ -75,7 +93,8 @@ local INSTANCE_MOUNTS = {
         bosses = {
             onyxia = {
                 mounts = {
-                    { item = 49636, spell = 69395 },    -- Reins of the Onyxian Drake
+                    -- Reins of the Onyxian Drake
+                    { item = 49636, spell = 69395 },
                 },
             },
         },
@@ -85,26 +104,34 @@ local INSTANCE_MOUNTS = {
         bosses = {
             koralon_the_flame_watcher = {
                 mounts = {
-                    { item = 43959, spell = 61465, faction = "Alliance" },      -- Reins of the Grand Black War Mammoth (alliance)
-                    { item = 44083, spell = 61467, faction = "Horde" },         -- Reins of the Grand Black War Mammoth (horde)
+                    -- Reins of the Grand Black War Mammoth (alliance)
+                    { item = 43959, spell = 61465, faction = "Alliance" },
+                    -- Reins of the Grand Black War Mammoth (horde)
+                    { item = 44083, spell = 61467, faction = "Horde" },
                 },
             },
             emalon_the_storm_watcher = {
                 mounts = {
-                    { item = 43959, spell = 61465, faction = "Alliance" },      -- Reins of the Grand Black War Mammoth (alliance)
-                    { item = 44083, spell = 61467, faction = "Horde" },         -- Reins of the Grand Black War Mammoth (horde)
+                    -- Reins of the Grand Black War Mammoth (alliance)
+                    { item = 43959, spell = 61465, faction = "Alliance" },
+                    -- Reins of the Grand Black War Mammoth (horde)
+                    { item = 44083, spell = 61467, faction = "Horde" },
                 },
             },
             archavon_the_stone_watcher = {
                 mounts = {
-                    { item = 43959, spell = 61465, faction = "Alliance" },      -- Reins of the Grand Black War Mammoth (alliance)
-                    { item = 44083, spell = 61467, faction = "Horde" },         -- Reins of the Grand Black War Mammoth (horde)
+                    -- Reins of the Grand Black War Mammoth (alliance)
+                    { item = 43959, spell = 61465, faction = "Alliance" },
+                    -- Reins of the Grand Black War Mammoth (horde)
+                    { item = 44083, spell = 61467, faction = "Horde" },
                 },
             },
             toravon_the_ice_watcher = {
                 mounts = {
-                    { item = 43959, spell = 61465, faction = "Alliance" },      -- Reins of the Grand Black War Mammoth (alliance)
-                    { item = 44083, spell = 61467, faction = "Horde" },         -- Reins of the Grand Black War Mammoth (horde)
+                    -- Reins of the Grand Black War Mammoth (alliance)
+                    { item = 43959, spell = 61465, faction = "Alliance" },
+                    -- Reins of the Grand Black War Mammoth (horde)
+                    { item = 44083, spell = 61467, faction = "Horde" },
                 },
             },
         },
@@ -114,7 +141,8 @@ local INSTANCE_MOUNTS = {
         bosses = {
             the_lich_king = {
                 mounts = {
-                    { item = 50818, spell = 72286 },    -- Invincible's Reins
+                    -- Invincible's Reins
+                    { item = 50818, spell = 72286, type = "heroic_25" },
                 },
             },
         },
@@ -125,12 +153,14 @@ local INSTANCE_MOUNTS = {
         bosses = {
             bloodlord_mandokir = {
                 mounts = {
-                    { item = 68823, spell = 96491 },    -- Armored Razzashi Raptor
+                    -- Armored Razzashi Raptor
+                    { item = 68823, spell = 96491, type = "heroic" },
                 },
             },
             high_priestess_kilnara = {
                 mounts = {
-                    { item = 68824, spell = 96499 },    -- Swift Zulian Panther
+                    -- Swift Zulian Panther
+                    { item = 68824, spell = 96499, type = "heroic" },
                 },
             },
         },
@@ -140,7 +170,8 @@ local INSTANCE_MOUNTS = {
         bosses = {
             alakir = {
                 mounts = {
-                    { item = 63041, spell = 88744 },    -- Reins of the Drake of the South Wind
+                    -- Reins of the Drake of the South Wind
+                    { item = 63041, spell = 88744 },
                 },
             },
         },
@@ -150,12 +181,14 @@ local INSTANCE_MOUNTS = {
         bosses = {
             alysrazor = {
                 mounts = {
-                    { item = 71665, spell = 101542 },   -- Flametalon of Alysrazor
+                    -- Flametalon of Alysrazor
+                    { item = 71665, spell = 101542 },
                 },
             },
             ragnaros = {
                 mounts = {
-                    { item = 69224, spell = 97493 },    -- Smoldering Egg of Millagazor
+                    -- Smoldering Egg of Millagazor
+                    { item = 69224, spell = 97493 },
                 },
             },
         },
@@ -165,13 +198,16 @@ local INSTANCE_MOUNTS = {
         bosses = {
             ultraxion = {
                 mounts = {
-                    { item = 78919, spell = 110039 },   -- Experiment 12-B
+                    -- Experiment 12-B
+                    { item = 78919, spell = 110039 },
                 },
             },
             madness_of_deathwing = {
                 mounts = {
-                    { item = 77067, spell = 107842 },   -- Reins of the Blazing Drake
-                    { item = 77069, spell = 107845 },   -- Life-Binder's Handmaiden
+                    -- Reins of the Blazing Drake
+                    { item = 77067, spell = 107842 },
+                    -- Life-Binder's Handmaiden
+                    { item = 77069, spell = 107845, type = "heroic" },
                 },
             },
         },
@@ -182,7 +218,8 @@ local INSTANCE_MOUNTS = {
         bosses = {
             elegon = {
                 mounts = {
-                    { item = 87777, spell = 127170 },   -- Reins of the Astral Cloud Serpent
+                    -- Reins of the Astral Cloud Serpent
+                    { item = 87777, spell = 127170 },
                 },
             },
         },
@@ -192,12 +229,14 @@ local INSTANCE_MOUNTS = {
         bosses = {
             jikun = {
                 mounts = {
-                    { item = 95059, spell = 139448 },   -- Clutch of Ji-Kun
+                    -- Clutch of Ji-Kun
+                    { item = 95059, spell = 139448 },
                 },
             },
             horridon = {
                 mounts = {
-                    { item = 93666, spell = 136471 },   -- Spawn of Horridon
+                    -- Spawn of Horridon
+                    { item = 93666, spell = 136471 },
                 },
             },
         },
@@ -207,7 +246,8 @@ local INSTANCE_MOUNTS = {
         bosses = {
             garrosh_hellscream = {
                 mounts = {
-                    { item = 104253, spell = 148417 },  -- Kor'kron Juggernaut
+                    -- Kor'kron Juggernaut
+                    { item = 104253, spell = 148417, type = "mythic" },
                 },
             },
         },
@@ -219,32 +259,37 @@ local WORLD_BOSSES_MOUNTS = {
     sha_of_anger = {
         level = 90, ilevel_max = 483,
         mounts = {
-            { item = 87771, spell = 127158 },       -- Reins of the Heavenly Onyx Cloud Serpent
+            -- Reins of the Heavenly Onyx Cloud Serpent
+            { item = 87771, spell = 127158 },
         },
     },
     galleon = {
         level = 90, ilevel_max = 496,
         mounts = {
-            { item = 89783, spell = 130965 },       -- Son of Galleon's Saddle
+            -- Son of Galleon's Saddle
+            { item = 89783, spell = 130965 },
         },
     },
     nalak = {
         level = 90, ilevel_max = 522,
         mounts = {
-            { item = 95057, spell = 139442 },       -- Reins of the Thundering Cobalt Cloud Serpent
+            -- Reins of the Thundering Cobalt Cloud Serpent
+            { item = 95057, spell = 139442 },
         },
     },
     oondasta = {
         level = 90, ilevel_max = 522,
         mounts = {
-            { item = 94228, spell = 138423 },       -- Reins of the Cobalt Primordial Direhorn
+            -- Reins of the Cobalt Primordial Direhorn
+            { item = 94228, spell = 138423 },
         },
     },
     -- Warlords of Draenor
     rukhmar = {
         level = 100, ilevel_max = 665,
         mounts = {
-            { quest = 37464, item = 116771, spell  = 171828 },      -- Solar Spirehawk
+            -- Solar Spirehawk
+            { quest = 37464, item = 116771, spell = 171828 },
         },
     },
 }
@@ -396,7 +441,11 @@ function addon:UpdateTooltip(tooltip)
                     local _, link = GetItemInfo(mount.item)
                     if link then
                         link = link:gsub('%[', ''):gsub('%]', '')
-                        tooltip:AddLine(string.format("    %s", link))
+                        if mount.type then
+                            tooltip:AddLine(string.format("    %s |c%s(%s)|r", link, COLOR_WHITE, L['type_' .. mount.type]))
+                        else
+                            tooltip:AddLine(string.format("    %s", link))
+                        end
                     end
                 end
             end
@@ -426,7 +475,11 @@ function addon:UpdateTooltip(tooltip)
                 local _, link = GetItemInfo(mount.item)
                 if link then
                     link = link:gsub('%[', ''):gsub('%]', '')
-                    tooltip:AddLine(string.format("    %s", link))
+                    if mount.type then
+                        tooltip:AddLine(string.format("    %s |c%s(%s)|r", link, COLOR_WHITE, L['type_' .. mount.type]))
+                    else
+                        tooltip:AddLine(string.format("    %s", link))
+                    end
                 end
             end
         end
