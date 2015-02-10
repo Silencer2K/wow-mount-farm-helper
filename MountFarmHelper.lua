@@ -260,28 +260,28 @@ local WORLD_BOSSES_MOUNTS = {
         level = 90, ilevel_max = 483,
         mounts = {
             -- Reins of the Heavenly Onyx Cloud Serpent
-            { item = 87771, spell = 127158 },
+            { quest = 32099, item = 87771, spell = 127158 },
         },
     },
     galleon = {
         level = 90, ilevel_max = 496,
         mounts = {
             -- Son of Galleon's Saddle
-            { item = 89783, spell = 130965 },
+            { quest = 32098, item = 89783, spell = 130965 },
         },
     },
     nalak = {
         level = 90, ilevel_max = 522,
         mounts = {
             -- Reins of the Thundering Cobalt Cloud Serpent
-            { item = 95057, spell = 139442 },
+            { quest = 32518, item = 95057, spell = 139442 },
         },
     },
     oondasta = {
         level = 90, ilevel_max = 522,
         mounts = {
             -- Reins of the Cobalt Primordial Direhorn
-            { item = 94228, spell = 138423 },
+            { quest = 32519, item = 94228, spell = 138423 },
         },
     },
     -- Warlords of Draenor
