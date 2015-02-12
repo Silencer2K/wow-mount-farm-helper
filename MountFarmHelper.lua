@@ -83,7 +83,7 @@ local INSTANCE_MOUNTS = {
             yogg_saron = {
                 mounts = {
                     -- Mimiron's Head
-                    { item = 45693, spell = 63796, type = "heroic" },
+                    { item = 45693, spell = 63796, type = "ulduar_25_0_keepers" },
                 },
             },
         },
