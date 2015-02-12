@@ -254,7 +254,7 @@ local INSTANCE_MOUNTS = {
     },
 }
 
-local WORLD_BOSSES_MOUNTS = {
+local EVENT_MOUNTS = {
     -- Mists of Pandaria
     sha_of_anger = {
         level = 90, ilevel_max = 483,
@@ -285,6 +285,19 @@ local WORLD_BOSSES_MOUNTS = {
         },
     },
     -- Warlords of Draenor
+    garrison_invasion = {
+        level = 100, ilevel_max = 645,
+        mounts = {
+            -- Shadowhide Pearltusk
+            { quest = 37640, item = 116663, spell = 171624, type = "gold_victory" },
+            -- Giant Coldsnout
+            { quest = 37640, item = 116673, spell = 171635, type = "gold_victory" },
+            -- Garn Steelmaw
+            { quest = 37640, item = 116779, spell = 171836, type = "gold_victory" },
+            -- Smoky Direwolf
+            { quest = 37640, item = 116786, spell = 171843, type = "gold_victory" },
+        },
+    },
     rukhmar = {
         level = 100, ilevel_max = 665,
         mounts = {
@@ -325,8 +338,8 @@ function addon:OnInitialize()
         end
     end
 
-    for boss in pairs(WORLD_BOSSES_MOUNTS) do
-        for _, mount in pairs(WORLD_BOSSES_MOUNTS[boss].mounts) do
+    for boss in pairs(EVENT_MOUNTS) do
+        for _, mount in pairs(EVENT_MOUNTS[boss].mounts) do
             GetItemInfo(mount.item)
         end
     end
@@ -368,9 +381,9 @@ function addon:UpdateTooltip(tooltip)
         end
     end
 
-    for boss in pairs(WORLD_BOSSES_MOUNTS) do
-        if WORLD_BOSSES_MOUNTS[boss].level <= level then
-            for _, mount in pairs(WORLD_BOSSES_MOUNTS[boss].mounts) do
+    for boss in pairs(EVENT_MOUNTS) do
+        if EVENT_MOUNTS[boss].level <= level then
+            for _, mount in pairs(EVENT_MOUNTS[boss].mounts) do
                 if not mounts[mount.spell]
                     and not (mount.quest and IsQuestFlaggedCompleted(mount.quest))
                     and (not mount.faction or mount.faction == faction)
@@ -457,18 +470,18 @@ function addon:UpdateTooltip(tooltip)
         table.insert(bosses, boss)
     end
     table.sort(bosses, function(a, b)
-        return WORLD_BOSSES_MOUNTS[a].ilevel_max < WORLD_BOSSES_MOUNTS[b].ilevel_max
+        return EVENT_MOUNTS[a].ilevel_max < EVENT_MOUNTS[b].ilevel_max
     end)
 
     for _, boss in pairs(bosses) do
         if not hasWorldBosses then
-            tooltip:AddLine(string.format("|c%s%s:|r", COLOR_WHITE, L.title_world_bosses))
+            tooltip:AddLine(string.format("|c%s%s:|r", COLOR_WHITE, L.title_events))
             hasWorldBosses = 1
         end
 
         tooltip:AddLine(string.format("%s:", L['world_boss_' .. boss]))
 
-        for _, mount in pairs(WORLD_BOSSES_MOUNTS[boss].mounts) do
+        for _, mount in pairs(EVENT_MOUNTS[boss].mounts) do
             if not mounts[mount.spell]
                 and (not mount.faction or mount.faction == faction)
             then
