@@ -4,9 +4,23 @@ LibStub('AceAddon-3.0'):NewAddon(addon, addonName, 'AceEvent-3.0')
 
 local L = LibStub('AceLocale-3.0'):GetLocale(addonName)
 
+local COLOR_GRAY = 'ff808080'
 local COLOR_WHITE = 'ffffffff'
 
 local INSTANCE_MOUNTS = {
+    -- Vanila WoW
+    stratholme = {
+        level = 46, ilevel_max = 60,
+        normal_dungeon = 1,
+        bosses = {
+            lord_aurius_rivendare = {
+                mounts = {
+                    -- Deathcharger's Reins
+                    { item = 13335, spell = 17481 },
+                },
+            },
+        },
+    },
     -- Burning Crusade
     sethekk_halls = {
         level = 70, ilevel_max = 115,
@@ -148,6 +162,30 @@ local INSTANCE_MOUNTS = {
         },
     },
     -- Cataclysm
+    the_vortex_pinnacle = {
+        level = 81, ilevel_max = 316,
+        normal_dungeon = 1,
+        bosses = {
+            altairus = {
+                mounts = {
+                    -- Reins of the Drake of the North Wind
+                    { item = 63040, spell = 88742 },
+                },
+            },
+        },
+    },
+    the_stonecore = {
+        level = 81, ilevel_max = 316,
+        normal_dungeon = 1,
+        bosses = {
+            slabhide = {
+                mounts = {
+                    -- Reins of the Vitreous Stone Drake
+                    { item = 63043, spell = 88746 },
+                },
+            },
+        },
+    },
     zulgurub = {
         level = 85, ilevel_max = 353,
         bosses = {
@@ -310,6 +348,7 @@ local EVENT_MOUNTS = {
 function addon:OnInitialize()
     self.db = LibStub('AceDB-3.0'):New(addonName .. 'DB', {
         profile = {
+            hide_normal = false,
             minimap = {
                 hide = false,
             },
@@ -320,10 +359,21 @@ function addon:OnInitialize()
         type = "launcher",
         text = "Mount Farm Helper",
         icon = "Interface\\ICONS\\ABILITY_MOUNT_GOLDENGRYPHON",
-        OnTooltipShow = function(...)
-            addon:UpdateTooltip(...)
+        OnTooltipShow = function(tooltip)
+            addon.tooltip = tooltip
+            addon:UpdateTooltip(addon.tooltip)
         end,
-    });
+        OnLeave = function()
+            addon.tooltip = nil
+        end,
+        OnClick = function()
+            addon.db.profile.hide_normal = not(self.db.profile.hide_normal)
+            if addon.tooltip then
+                addon:UpdateTooltip(addon.tooltip)
+                addon.tooltip:Show()
+            end
+        end,
+    })
 
     self.icon = LibStub("LibDBIcon-1.0")
     self.icon:Register(addonName, self.ldb, self.db.profile.minimap)
@@ -346,6 +396,8 @@ function addon:OnInitialize()
 end
 
 function addon:UpdateTooltip(tooltip)
+    tooltip:ClearLines()
+
     local level = UnitLevel("player")
     local faction = UnitFactionGroup("player")
 
@@ -366,15 +418,17 @@ function addon:UpdateTooltip(tooltip)
     local raid, boss, mount
 
     for raid in pairs(INSTANCE_MOUNTS) do
-        im[raid] = {}
+        if not (INSTANCE_MOUNTS[raid].normal_dungeon and self.db.profile.hide_normal) then
+            im[raid] = {}
 
-        for boss in pairs(INSTANCE_MOUNTS[raid].bosses) do
-            if INSTANCE_MOUNTS[raid].level <= level then
-                for _, mount in pairs(INSTANCE_MOUNTS[raid].bosses[boss].mounts) do
-                    if not mounts[mount.spell]
-                        and (not mount.faction or mount.faction == faction)
-                    then
-                        im[raid][boss] = 1
+            for boss in pairs(INSTANCE_MOUNTS[raid].bosses) do
+                if INSTANCE_MOUNTS[raid].level <= level then
+                    for _, mount in pairs(INSTANCE_MOUNTS[raid].bosses[boss].mounts) do
+                        if not mounts[mount.spell]
+                            and (not mount.faction or mount.faction == faction)
+                        then
+                            im[raid][boss] = 1
+                        end
                     end
                 end
             end
@@ -409,7 +463,7 @@ function addon:UpdateTooltip(tooltip)
         local raidName, _, _, _, locked, extended, _, _, _, _, numBosses = GetSavedInstanceInfo(i)
         raid = lr[raidName]
 
-        if raid and im[raid] and locked and not extended then
+        if raid and im[raid] and not INSTANCE_MOUNTS[raid].normal_dungeon and locked and not extended then
             for j = 1, numBosses do
                 local bossName, _, killed = GetSavedInstanceEncounterInfo(i, j)
                 boss = lb[bossName]
@@ -441,6 +495,7 @@ function addon:UpdateTooltip(tooltip)
     for _, raid in pairs(raids) do
         for boss in pairs(im[raid]) do
             if not hasRaids then
+                tooltip:AddLine(' ')
                 tooltip:AddLine(string.format("|c%s%s:|r", COLOR_WHITE, L.title_raids))
                 hasRaids = 1
             end
@@ -475,6 +530,7 @@ function addon:UpdateTooltip(tooltip)
 
     for _, boss in pairs(bosses) do
         if not hasWorldBosses then
+            tooltip:AddLine(' ')
             tooltip:AddLine(string.format("|c%s%s:|r", COLOR_WHITE, L.title_events))
             hasWorldBosses = 1
         end
@@ -496,5 +552,13 @@ function addon:UpdateTooltip(tooltip)
                 end
             end
         end
+    end
+
+    tooltip:AddLine(' ')
+
+    if self.db.profile.hide_normal then
+        tooltip:AddLine(string.format("|c%s%s|r", COLOR_GRAY, L.title_show_normal))
+    else
+        tooltip:AddLine(string.format("|c%s%s|r", COLOR_GRAY, L.title_hide_normal))
     end
 end
