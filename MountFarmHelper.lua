@@ -400,8 +400,8 @@ function addon:UpdateTooltip(tooltip)
             lr[v] = strsub(k, 6)
         elseif strsub(k, 1, 5) == 'boss_' then
             lb[v] = strsub(k, 6)
-        elseif strsub(k, 1, 11) == 'world_boss_' then
-            lw[v] = strsub(k, 12)
+        elseif strsub(k, 1, 6) == 'event_' then
+            lw[v] = strsub(k, 7)
         end
     end
 
@@ -479,7 +479,7 @@ function addon:UpdateTooltip(tooltip)
             hasWorldBosses = 1
         end
 
-        tooltip:AddLine(string.format("%s:", L['world_boss_' .. boss]))
+        tooltip:AddLine(string.format("%s:", L['event_' .. boss]))
 
         for _, mount in pairs(EVENT_MOUNTS[boss].mounts) do
             if not mounts[mount.spell]
