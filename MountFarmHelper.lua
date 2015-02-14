@@ -120,7 +120,7 @@ function addon:UpdateTooltip(tooltip)
 
                         local add
                         if mountSource.type == 'world' then
-                            add = IsQuestFlaggedCompleted(mountSource.quest_id)
+                            add = not IsQuestFlaggedCompleted(mountSource.quest_id)
                         elseif mountSource.type == 'dungeon' and not mountSource.subtype then
                             add = not self.db.profile.hide_normal
                         else
