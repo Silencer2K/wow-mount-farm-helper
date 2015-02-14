@@ -8,6 +8,7 @@ local LBB = LibStub('LibBabble-Boss-3.0'):GetUnstrictLookupTable()
 local EMPTY_LINE = ' '
 
 local COLOR_WHITE = { 1, 1, 1 }
+local COLOR_WHITE_TEXT = 'ffffffff'
 
 function tableIsEmpty(table)
     for _ in pairs(table) do
@@ -118,6 +119,14 @@ function addon:UpdateTooltip(tooltip)
                         local npcName = self:GetNpcName(mountSource.npc_id)
                         local raidSave = mountSource.raid_save and LBB[mountSource.raid_save] or npcName
 
+                        local comment
+                        if mountSource.subtype then
+                            comment = L['type_' .. mountSource.subtype]
+                        end
+                        if mountSource.cond then
+                            comment = (comment and (comment .. ', ') or '') .. L['cond_' .. mountSource.cond]
+                        end
+
                         local add
                         if mountSource.type == 'world' then
                             add = not IsQuestFlaggedCompleted(mountSource.quest_id)
@@ -144,7 +153,7 @@ function addon:UpdateTooltip(tooltip)
 
                             npcData.sort = min(zoneData.sort, mountSource.for_sort)
 
-                            table.insert(npcData.items, { link = mountLink })
+                            table.insert(npcData.items, { link = mountLink, comment = comment })
                         end
                     end
                 end
@@ -199,7 +208,16 @@ function addon:UpdateTooltip(tooltip)
 
                     local mountData
                     for _, mountData in pairs(secondData.items) do
-                        tooltip:AddLine(string.format('        %s', mountData.link:gsub('%[', ''):gsub('%]', '')))
+                        if mountData.comment then
+                            tooltip:AddLine(string.format('        %s |c%s(%s)|r',
+                                mountData.link:gsub('%[', ''):gsub('%]', ''),
+                                COLOR_WHITE_TEXT, mountData.comment
+                            ))
+                        else
+                            tooltip:AddLine(string.format('        %s',
+                                mountData.link:gsub('%[', ''):gsub('%]', '')
+                            ))
+                        end
                     end
                 end
             end
