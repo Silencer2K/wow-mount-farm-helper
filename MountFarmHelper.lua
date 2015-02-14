@@ -164,7 +164,7 @@ function addon:UpdateTooltip(tooltip)
     tooltip:AddLine(L.title, unpack(COLOR_WHITE));
 
     local mountTable
-    for _, mountTable in pairs({{ items = raidMounts, title = 'raids' }, { items = worldMounts, title = 'events' }}) do
+    for _, mountTable in pairs({{ items = raidMounts, title = 'raid' }, { items = worldMounts, title = 'world' }}) do
         if not tableIsEmpty(mountTable.items) then
             tooltip:AddLine(EMPTY_LINE)
             tooltip:AddLine(L['title_' .. mountTable.title], unpack(COLOR_WHITE))
