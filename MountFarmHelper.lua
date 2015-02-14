@@ -118,41 +118,33 @@ function addon:UpdateTooltip(tooltip)
                         local npcName = self:GetNpcName(mountSource.npc_id)
                         local raidSave = mountSource.raid_save and LBB[mountSource.raid_save] or npcName
 
+                        local add
                         if mountSource.type == 'world' then
-                            if not IsQuestFlaggedCompleted(mountSource.quest_id) then
-                                local zoneData = worldMounts[zoneName] or { items = {}, sort = mountSource.for_sort }
-                                worldMounts[zoneName] = zoneData
-
-                                zoneData.sort = min(zoneData.sort, mountSource.for_sort)
-
-                                local npcData = zoneData.items[npcName] or { items = {}, sort = mountSource.for_sort }
-                                zoneData.items[npcName] = npcData
-
-                                npcData.sort = min(zoneData.sort, mountSource.for_sort)
-
-                                table.insert(npcData.items, { link = mountLink })
-                            end
+                            add = IsQuestFlaggedCompleted(mountSource.quest_id)
+                        elseif mountSource.type == 'dungeon' and not mountSource.subtype then
+                            add = not self.db.profile.hide_normal
                         else
-                            local add
-                            if mountSource.type == 'dungeon' and not mountSource.subtype then
-                                add = not self.db.profile.hide_normal
+                            add = not(savedRaids[zoneName] and savedRaids[zoneName][raidSave])
+                        end
+
+                        if add then
+                            local zoneData
+                            if mountSource.type == 'world' then
+                                zoneData = worldMounts[zoneName] or { items = {}, sort = mountSource.for_sort }
+                                worldMounts[zoneName] = zoneData
                             else
-                                add = not(savedRaids[zoneName] and savedRaids[zoneName][raidSave])
-                            end
-
-                            if add then
-                                local zoneData = raidMounts[zoneName] or { items = {}, sort = mountSource.for_sort }
+                                zoneData = raidMounts[zoneName] or { items = {}, sort = mountSource.for_sort }
                                 raidMounts[zoneName] = zoneData
-
-                                zoneData.sort = min(zoneData.sort, mountSource.for_sort)
-
-                                local npcData = zoneData.items[npcName] or { items = {}, sort = mountSource.for_sort }
-                                zoneData.items[npcName] = npcData
-
-                                npcData.sort = min(zoneData.sort, mountSource.for_sort)
-
-                                table.insert(npcData.items, { link = mountLink })
                             end
+
+                            zoneData.sort = min(zoneData.sort, mountSource.for_sort)
+
+                            local npcData = zoneData.items[npcName] or { items = {}, sort = mountSource.for_sort }
+                            zoneData.items[npcName] = npcData
+
+                            npcData.sort = min(zoneData.sort, mountSource.for_sort)
+
+                            table.insert(npcData.items, { link = mountLink })
                         end
                     end
                 end
