@@ -2,7 +2,7 @@
 ## Title: Mount Farm Helper
 ## Author: silencer2k@gmail.com
 ## SavedVariables: MountFarmHelperDB
-## Version: 0.1
+## Version: 0.5
 
 MountFarmHelper.xml
 
@@ -19,4 +19,5 @@ locales\ptBR.lua
 locales\zhCN.lua
 locales\zhTW.lua
 
+MountsDB.lua
 MountFarmHelper.lua
