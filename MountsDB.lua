@@ -59,6 +59,39 @@ MFH_DB_MOUNTS = {
             },
         },
     },
+    [43951] = { -- Reins of the Bronze Drake
+        spell_id = 59569,
+        from = {
+            {
+                type = 'dungeon', subtype = 'heroic', npc_id = 32273,
+                zone_id = 521,
+                level = 80, for_sort = 200,
+                cond = '25_mins',
+            },
+        },
+    },
+    [43954] = { -- Reins of the Twilight Drake
+        spell_id = 59571,
+        from = {
+            {
+                type = 'raid', subtype = 'normal_25', npc_id = 28860,
+                zone_id = 531,
+                level = 80, for_sort = 226,
+                cond = '3_drakes_up',
+            },
+        },
+    },
+    [43986] = { -- Reins of the Black Drake
+        spell_id = 59650,
+        from = {
+            {
+                type = 'raid', subtype = 'normal_10', npc_id = 28860,
+                zone_id = 531,
+                level = 80, for_sort = 213,
+                cond = '3_drakes_up',
+            },
+        },
+    },
     [43953] = { -- Reins of the Blue Drake
         spell_id = 59568,
         from = {
