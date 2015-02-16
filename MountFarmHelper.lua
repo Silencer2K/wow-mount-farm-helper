@@ -90,13 +90,17 @@ function addon:UpdateTooltip(tooltip)
     for i = 1, GetNumSavedInstances() do
         local raidName, _, _, _, locked, extended, _, _, _, _, numBosses = GetSavedInstanceInfo(i)
         if locked and not extended then
-            savedRaids[raidName] = {}
+            if numBosses > 0 then
+                savedRaids[raidName] = {}
 
-            for j = 1, numBosses do
-                local bossName, _, killed = GetSavedInstanceEncounterInfo(i, j)
-                if killed then
-                    savedRaids[raidName][bossName] = 1
+                for j = 1, numBosses do
+                    local bossName, _, killed = GetSavedInstanceEncounterInfo(i, j)
+                    if killed then
+                        savedRaids[raidName][bossName] = 1
+                    end
                 end
+            else
+                savedRaids[raidName] = 1
             end
         end
     end
@@ -133,7 +137,7 @@ function addon:UpdateTooltip(tooltip)
                         elseif mountSource.type == 'dungeon' and not mountSource.subtype then
                             add = not self.db.profile.hide_normal
                         else
-                            add = not(savedRaids[zoneName] and savedRaids[zoneName][raidSave])
+                            add = not(savedRaids[zoneName] and (type(savedRaids[zoneName]) ~= 'table' or savedRaids[zoneName][raidSave]))
                         end
 
                         if add then
