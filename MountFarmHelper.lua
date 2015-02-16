@@ -63,7 +63,7 @@ end
 
 function addon:GetNpcName(npcId)
     local tooltip = self.scanTooltip
-    
+
     if not tooltip then
         tooltip = CreateFrame('GameTooltip', 'MFH_SCAN_TOOLTIP', UIParent, 'GameTooltipTemplate')
         self.scanTooltip = tooltip
@@ -108,7 +108,7 @@ function addon:UpdateTooltip(tooltip)
     local playerFaction = string.lower(UnitFactionGroup('player'))
     local playerLevel = UnitLevel('player')
 
-    local raidMounts, worldMounts = {}, {}
+    local raidMounts, worldMounts, miscMounts = {}, {}, {}
 
     local mountId, mountData
     for mountId, mountData in pairs(MFH_DB_MOUNTS) do
@@ -117,47 +117,61 @@ function addon:UpdateTooltip(tooltip)
 
             local mountSource
             for _, mountSource in pairs(mountData.from) do
-                if mountSource.level <= playerLevel then
-                    if mountSource.type == 'dungeon' or mountSource.type == 'raid' or mountSource.type == 'world' then
-                        local zoneName = GetMapNameByID(mountSource.zone_id)
-                        local npcName = self:GetNpcName(mountSource.npc_id)
-                        local raidSave = mountSource.raid_save and LBB[mountSource.raid_save] or npcName
+                if not mountSource.faction or mountSource.faction == playerFaction then
+                    if mountSource.level <= playerLevel then
+                        if mountSource.type == 'dungeon' or mountSource.type == 'raid' or mountSource.type == 'world' then
+                            local zoneName = GetMapNameByID(mountSource.zone_id)
+                            local npcName = self:GetNpcName(mountSource.npc_id)
+                            local raidSave = mountSource.raid_save and LBB[mountSource.raid_save] or npcName
 
-                        local comment
-                        if mountSource.subtype then
-                            comment = L['type_' .. mountSource.subtype]
-                        end
-                        if mountSource.cond then
-                            comment = (comment and (comment .. ', ') or '') .. L['cond_' .. mountSource.cond]
-                        end
-
-                        local add
-                        if mountSource.type == 'world' then
-                            add = not IsQuestFlaggedCompleted(mountSource.quest_id)
-                        elseif mountSource.type == 'dungeon' and not mountSource.subtype then
-                            add = not self.db.profile.hide_normal
-                        else
-                            add = not(savedRaids[zoneName] and (type(savedRaids[zoneName]) ~= 'table' or savedRaids[zoneName][raidSave]))
-                        end
-
-                        if add then
-                            local zoneData
-                            if mountSource.type == 'world' then
-                                zoneData = worldMounts[zoneName] or { items = {}, sort = mountSource.for_sort }
-                                worldMounts[zoneName] = zoneData
-                            else
-                                zoneData = raidMounts[zoneName] or { items = {}, sort = mountSource.for_sort }
-                                raidMounts[zoneName] = zoneData
+                            local comment
+                            if mountSource.subtype then
+                                comment = L['type_' .. mountSource.subtype]
+                            end
+                            if mountSource.cond then
+                                comment = (comment and (comment .. ', ') or '') .. L['cond_' .. mountSource.cond]
                             end
 
-                            zoneData.sort = min(zoneData.sort, mountSource.for_sort)
+                            local add
+                            if mountSource.type == 'world' then
+                                add = not IsQuestFlaggedCompleted(mountSource.quest_id)
+                            elseif mountSource.type == 'dungeon' and not mountSource.subtype then
+                                add = not self.db.profile.hide_normal
+                            else
+                                add = not(savedRaids[zoneName] and (type(savedRaids[zoneName]) ~= 'table' or savedRaids[zoneName][raidSave]))
+                            end
 
-                            local npcData = zoneData.items[npcName] or { items = {}, sort = mountSource.for_sort }
-                            zoneData.items[npcName] = npcData
+                            if add then
+                                local zoneData
+                                if mountSource.type == 'world' then
+                                    zoneData = worldMounts[zoneName] or { items = {}, sort = mountSource.for_sort }
+                                    worldMounts[zoneName] = zoneData
+                                else
+                                    zoneData = raidMounts[zoneName] or { items = {}, sort = mountSource.for_sort }
+                                    raidMounts[zoneName] = zoneData
+                                end
 
-                            npcData.sort = min(zoneData.sort, mountSource.for_sort)
+                                zoneData.sort = min(zoneData.sort, mountSource.for_sort)
 
-                            table.insert(npcData.items, { link = mountLink, comment = comment })
+                                local npcData = zoneData.items[npcName] or { items = {}, sort = mountSource.for_sort }
+                                zoneData.items[npcName] = npcData
+
+                                npcData.sort = min(zoneData.sort, mountSource.for_sort)
+
+                                table.insert(npcData.items, { link = mountLink, comment = comment })
+                            end
+                        elseif mountSource.type == 'special' then
+                            miscName = L['special_' .. mountSource.subtype]
+                            comment = L['cond_' .. mountSource.cond]
+
+                            if not IsQuestFlaggedCompleted(mountSource.quest_id) then
+                                local miscData = miscMounts[miscName] or { items = {}, sort = mountSource.for_sort }
+                                miscMounts[miscName] = miscData
+
+                                miscData.sort = min(miscData.sort, mountSource.for_sort)
+
+                                table.insert(miscData.items, { link = mountLink, comment = comment })
+                            end
                         end
                     end
                 end
@@ -223,6 +237,38 @@ function addon:UpdateTooltip(tooltip)
                             ))
                         end
                     end
+                end
+            end
+        end
+    end
+
+    if not tableIsEmpty(miscMounts) then
+        tooltip:AddLine(EMPTY_LINE)
+
+        local firstSorted, firstName = {}
+
+        for firstName in pairs(miscMounts) do
+            table.insert(firstSorted, firstName)
+        end
+
+        table.sort(firstSorted, function(a, b)
+            return miscMounts[a].sort < miscMounts[b].sort
+        end)
+
+        for _, firstName in pairs(firstSorted) do
+            tooltip:AddLine(string.format('%s', firstName))
+
+            local mountData
+            for _, mountData in pairs(miscMounts[firstName].items) do
+                if mountData.comment then
+                    tooltip:AddLine(string.format('        %s |c%s(%s)|r',
+                        mountData.link:gsub('%[', ''):gsub('%]', ''),
+                        COLOR_WHITE_TEXT, mountData.comment
+                    ))
+                else
+                    tooltip:AddLine(string.format('        %s',
+                        mountData.link:gsub('%[', ''):gsub('%]', '')
+                    ))
                 end
             end
         end

@@ -103,7 +103,7 @@ MFH_DB_MOUNTS = {
         },
     },
     [43959] = { -- Reins of the Grand Black War Mammoth (alliance)
-        spell_id = 61465, faction = "alliance",
+        spell_id = 61465, faction = 'alliance',
         from = {
             {
                 type = 'raid', npc_id = 31125,
@@ -128,7 +128,7 @@ MFH_DB_MOUNTS = {
         },
     },
     [44083] = { -- Reins of the Grand Black War Mammoth (horde)
-        spell_id = 61467, faction = "horde",
+        spell_id = 61467, faction = 'horde',
         from = {
             {
                 type = 'raid', npc_id = 31125,
@@ -270,7 +270,7 @@ MFH_DB_MOUNTS = {
                 type = 'raid', npc_id = 56173,
                 zone_id = 824,
                 level = 85, for_sort = 403,
-                raid_save = "Madness of Deathwing",
+                raid_save = 'Madness of Deathwing',
             },
         },
     },
@@ -281,7 +281,7 @@ MFH_DB_MOUNTS = {
                 type = 'raid', subtype = 'heroic', npc_id = 56173,
                 zone_id = 824,
                 level = 85, for_sort = 416,
-                raid_save = "Madness of Deathwing",
+                raid_save = 'Madness of Deathwing',
             },
         },
     },
@@ -372,6 +372,82 @@ MFH_DB_MOUNTS = {
                 type = 'raid', subtype = 'mythic', npc_id = 71865,
                 zone_id = 953,
                 level = 90, for_sort = 620,
+            },
+        },
+    },
+    [116663] = { -- Shadowhide Pearltusk
+        spell_id = 171624,
+        from = {
+            {
+                faction = 'alliance',
+                type = 'special', subtype = 'garrison_invasion', quest_id = 37640,
+                zone_id = 941,
+                level = 100, for_sort = 645,
+                cond = 'gold_victory',
+            },
+            {
+                faction = 'horde',
+                type = 'special', subtype = 'garrison_invasion', quest_id = 37640,
+                zone_id = 947,
+                level = 100, for_sort = 645,
+                cond = 'gold_victory',
+            },
+        },
+    },
+    [116673] = { -- Giant Coldsnout
+        spell_id = 171635,
+        from = {
+            {
+                faction = 'alliance',
+                type = 'special', subtype = 'garrison_invasion', quest_id = 37640,
+                zone_id = 941,
+                level = 100, for_sort = 645,
+                cond = 'gold_victory',
+            },
+            {
+                faction = 'horde',
+                type = 'special', subtype = 'garrison_invasion', quest_id = 37640,
+                zone_id = 947,
+                level = 100, for_sort = 645,
+                cond = 'gold_victory',
+            },
+        },
+    },
+    [116779] = { -- Garn Steelmaw
+        spell_id = 171836,
+        from = {
+            {
+                faction = 'alliance',
+                type = 'special', subtype = 'garrison_invasion', quest_id = 37640,
+                zone_id = 941,
+                level = 100, for_sort = 645,
+                cond = 'gold_victory',
+            },
+            {
+                faction = 'horde',
+                type = 'special', subtype = 'garrison_invasion', quest_id = 37640,
+                zone_id = 947,
+                level = 100, for_sort = 645,
+                cond = 'gold_victory',
+            },
+        },
+    },
+    [116786] = { -- Smoky Direwolf
+        spell_id = 171843,
+        from = {
+            {
+                faction = 'alliance',
+                type = 'special', subtype = 'garrison_invasion', quest_id = 37640,
+                zone_id = 941,
+                level = 100, for_sort = 645,
+                cond = 'gold_victory',
+            },
+            {
+                faction = 'horde',
+                type = 'special', subtype = 'garrison_invasion', quest_id = 37640,
+                zone_id = 947,
+                level = 100, for_sort = 645,
+                cond = 'gold_victory',
             },
         },
     },
