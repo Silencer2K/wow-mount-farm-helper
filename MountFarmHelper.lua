@@ -72,7 +72,18 @@ function addon:GetNpcName(npcId)
     tooltip:SetOwner(UIParent, 'ANCHOR_NONE')
     tooltip:SetHyperlink(string.format('unit:Creature-0-0-0-0-%d:0000000000', npcId))
 
-    return _G[tooltip:GetName() .. 'TextLeft1']:GetText()
+    local npcName = _G[tooltip:GetName() .. 'TextLeft1']:GetText()
+
+    if not npcName then
+        npcName = MFH_DB_NPC_NAMES[npcId]
+        if not npcName then
+            npcName = string.format('npc#%d', npcId)
+        else
+            npcName = LBB[npcName] or npcName
+        end
+    end
+
+    return npcName
 end
 
 function addon:UpdateTooltip(tooltip)
