@@ -102,9 +102,12 @@ end
 function addon:UpdateTooltip(tooltip)
     local i, j
 
-    local playerMounts = {}
+    local mountIndexes, playerMounts = {}, {}
     for i = 1, C_MountJournal.GetNumMounts() do
         local _, spellId, _, _, _, _, _, _, _, _, isCollected = C_MountJournal.GetMountInfo(i)
+
+        mountIndexes[spellId] = i
+
         if isCollected then
             playerMounts[spellId] = 1
         end
@@ -182,7 +185,7 @@ function addon:UpdateTooltip(tooltip)
 
                                 npcData.sort = min(zoneData.sort, mountSource.for_sort)
 
-                                table.insert(npcData.items, { link = mountLink, comment = comment })
+                                table.insert(npcData.items, { link = mountLink, mountIndex = mountIndexes[mountData.spell_id], comment = comment })
                             end
                         elseif mountSource.type == 'special' then
                             miscName = L['special_' .. mountSource.subtype]
@@ -194,7 +197,7 @@ function addon:UpdateTooltip(tooltip)
 
                                 miscData.sort = min(miscData.sort, mountSource.for_sort)
 
-                                table.insert(miscData.items, { link = mountLink, comment = comment })
+                                table.insert(miscData.items, { link = mountLink, mountIndex = mountIndexes[mountData.spell_id], comment = comment })
                             end
                         end
                     end
@@ -263,15 +266,21 @@ function addon:UpdateTooltip(tooltip)
 
                     local mountData
                     for _, mountData in pairs(secondData.items) do
+                        lineNo = tooltip:AddLine()
+
                         if mountData.comment then
-                            lineNo = tooltip:AddLine()
                             tooltip:SetCell(lineNo, 3, mountData.link:gsub('%[', ''):gsub('%]', ''))
 
                             tooltip:SetCell(lineNo, 4, mountData.comment)
                             tooltip:SetCellTextColor(lineNo, 4, unpack(COLOR_COMMENT))
                         else
-                            lineNo = tooltip:AddLine()
                             tooltip:SetCell(lineNo, 3, mountData.link:gsub('%[', ''):gsub('%]', ''), nil, nil, 2)
+                        end
+
+                        if mountData.mountIndex then
+                            tooltip:SetLineScript(lineNo, 'OnMouseUp', function()
+                                self:OpenMountJournal(mountData.mountIndex)
+                            end)
                         end
                     end
                 end
@@ -300,17 +309,37 @@ function addon:UpdateTooltip(tooltip)
 
             local mountData
             for _, mountData in pairs(miscMounts[firstName].items) do
+                lineNo = tooltip:AddLine()
+
                 if mountData.comment then
-                    lineNo = tooltip:AddLine()
                     tooltip:SetCell(lineNo, 3, mountData.link:gsub('%[', ''):gsub('%]', ''))
 
                     tooltip:SetCell(lineNo, 4, mountData.comment)
                     tooltip:SetCellTextColor(lineNo, 4, unpack(COLOR_COMMENT))
                 else
-                    lineNo = tooltip:AddLine()
                     tooltip:SetCell(lineNo, 3, mountData.link:gsub('%[', ''):gsub('%]', ''), nil, nil, 2)
+                end
+
+                if mountData.mountIndex then
+                    tooltip:SetLineScript(lineNo, 'OnMouseUp', function()
+                        self:OpenMountJournal(mountData.mountIndex)
+                    end)
                 end
             end
         end
+    end
+end
+
+function addon:OpenMountJournal(index)
+    local journal = _G.PetJournalParent
+
+    if not journal:IsShown() then
+        TogglePetJournal()
+    end
+
+    PetJournalParent_SetTab(journal, 1)
+
+    if index then
+        MountJournal_Select(index)
     end
 end
