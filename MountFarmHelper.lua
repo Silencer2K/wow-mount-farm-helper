@@ -5,10 +5,9 @@ LibStub('AceAddon-3.0'):NewAddon(addon, addonName, 'AceEvent-3.0')
 local L = LibStub('AceLocale-3.0'):GetLocale(addonName)
 local LBB = LibStub('LibBabble-Boss-3.0'):GetUnstrictLookupTable()
 
-local EMPTY_LINE = ' '
+local qtip = LibStub('LibQTip-1.0')
 
-local COLOR_WHITE = { 1, 1, 1 }
-local COLOR_WHITE_TEXT = 'ffffffff'
+local TOOLTIP_SEPARATOR = { 1, 1, 1, 1, 0.5 }
 
 function tableIsEmpty(table)
     for _ in pairs(table) do
@@ -39,9 +38,19 @@ function addon:OnInitialize()
         type = 'launcher',
         text = "Mount Farm Helper",
         icon = 'Interface\\ICONS\\ABILITY_MOUNT_GOLDENGRYPHON',
-        OnTooltipShow = function(tooltip)
-            self.tooltip = tooltip
-            self:UpdateTooltip(tooltip)
+
+        OnEnter = function(anchor)
+            if qtip:IsAcquired('MountFarmHelper') and self.tooltip then
+                self.tooltip:Clear()
+            else
+                self.tooltip = qtip:Acquire('MountFarmHelper', 2)
+            end
+
+            self:UpdateTooltip(self.tooltip)
+
+            self.tooltip:SmartAnchorTo(anchor)
+            self.tooltip:SetAutoHideDelay(0.05, anchor)
+            self.tooltip:Show()
         end,
     })
 
@@ -190,14 +199,13 @@ function addon:UpdateTooltip(tooltip)
         end
     end
 
-    tooltip:ClearLines();
-    tooltip:AddLine(L.title, unpack(COLOR_WHITE));
+    tooltip:AddHeader(L.title);
 
     local mountTable
     for _, mountTable in pairs({{ items = raidMounts, title = 'raid' }, { items = worldMounts, title = 'world' }}) do
         if not tableIsEmpty(mountTable.items) then
-            tooltip:AddLine(EMPTY_LINE)
-            tooltip:AddLine(L['title_' .. mountTable.title], unpack(COLOR_WHITE))
+            tooltip:AddSeparator(unpack(TOOLTIP_SEPARATOR))
+            tooltip:AddHeader(L['title_' .. mountTable.title])
 
             local firstSorted, firstName = {}
 
@@ -238,9 +246,9 @@ function addon:UpdateTooltip(tooltip)
                     local mountData
                     for _, mountData in pairs(secondData.items) do
                         if mountData.comment then
-                            tooltip:AddLine(string.format('        %s |c%s(%s)|r',
+                            tooltip:AddLine(string.format('        %s (%s)',
                                 mountData.link:gsub('%[', ''):gsub('%]', ''),
-                                COLOR_WHITE_TEXT, mountData.comment
+                                mountData.comment
                             ))
                         else
                             tooltip:AddLine(string.format('        %s',
@@ -254,7 +262,7 @@ function addon:UpdateTooltip(tooltip)
     end
 
     if not tableIsEmpty(miscMounts) then
-        tooltip:AddLine(EMPTY_LINE)
+        tooltip:AddSeparator(unpack(TOOLTIP_SEPARATOR))
 
         local firstSorted, firstName = {}
 
@@ -272,9 +280,9 @@ function addon:UpdateTooltip(tooltip)
             local mountData
             for _, mountData in pairs(miscMounts[firstName].items) do
                 if mountData.comment then
-                    tooltip:AddLine(string.format('        %s |c%s(%s)|r',
+                    tooltip:AddLine(string.format('        %s (%s)',
                         mountData.link:gsub('%[', ''):gsub('%]', ''),
-                        COLOR_WHITE_TEXT, mountData.comment
+                        mountData.comment
                     ))
                 else
                     tooltip:AddLine(string.format('        %s',
