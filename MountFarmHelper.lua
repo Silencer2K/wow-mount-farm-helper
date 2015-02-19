@@ -43,13 +43,14 @@ function addon:OnInitialize()
             if qtip:IsAcquired('MountFarmHelper') and self.tooltip then
                 self.tooltip:Clear()
             else
-                self.tooltip = qtip:Acquire('MountFarmHelper', 2)
+                self.tooltip = qtip:Acquire('MountFarmHelper', 5, 'LEFT', 'LEFT', 'LEFT', 'RIGHT')
             end
 
             self:UpdateTooltip(self.tooltip)
 
             self.tooltip:SmartAnchorTo(anchor)
             self.tooltip:SetAutoHideDelay(0.05, anchor)
+            self.tooltip:UpdateScrolling()
             self.tooltip:Show()
         end,
     })
@@ -149,7 +150,7 @@ function addon:UpdateTooltip(tooltip)
                                 comment = L['type_' .. mountSource.subtype]
                             end
                             if mountSource.cond then
-                                comment = (comment and (comment .. ', ') or '') .. L['cond_' .. mountSource.cond]
+                                comment = (comment and (comment .. ' + ') or '') .. L['cond_' .. mountSource.cond]
                             end
 
                             local add
@@ -199,13 +200,16 @@ function addon:UpdateTooltip(tooltip)
         end
     end
 
-    tooltip:AddHeader(L.title);
+    local lineNo = tooltip:AddHeader();
+    tooltip:SetCell(lineNo, 1, L.title, nil, nil, 4)
 
     local mountTable
     for _, mountTable in pairs({{ items = raidMounts, title = 'raid' }, { items = worldMounts, title = 'world' }}) do
         if not tableIsEmpty(mountTable.items) then
             tooltip:AddSeparator(unpack(TOOLTIP_SEPARATOR))
-            tooltip:AddHeader(L['title_' .. mountTable.title])
+
+            lineNo = tooltip:AddHeader()
+            tooltip:SetCell(lineNo, 1, L['title_' .. mountTable.title], nil, nil, 4)
 
             local firstSorted, firstName = {}
 
@@ -234,26 +238,25 @@ function addon:UpdateTooltip(tooltip)
                     local secondData = firstData.items[secondName]
 
                     if tableLength(firstData.items) == 1 then
-                        tooltip:AddLine(string.format('%s / %s', firstName, secondName))
+                        lineNo = tooltip:AddLine()
+                        tooltip:SetCell(lineNo, 1, string.format('%s / %s', firstName, secondName), nil, nil, 4)
                     else
                         if not titlePrinted then
-                            tooltip:AddLine(string.format('%s', firstName))
+                            lineNo = tooltip:AddLine()
+                            tooltip:SetCell(lineNo, 1, firstName, nil, nil, 4)
                             titlePrinted = 1
                         end
-                        tooltip:AddLine(string.format('    %s', secondName))
+
+                        lineNo = tooltip:AddLine()
+                        tooltip:SetCell(lineNo, 2, secondName, nil, nil, 3)
                     end
 
                     local mountData
                     for _, mountData in pairs(secondData.items) do
+                        lineNo = tooltip:AddLine()
+                        tooltip:SetCell(lineNo, 3, mountData.link:gsub('%[', ''):gsub('%]', ''))
                         if mountData.comment then
-                            tooltip:AddLine(string.format('        %s (%s)',
-                                mountData.link:gsub('%[', ''):gsub('%]', ''),
-                                mountData.comment
-                            ))
-                        else
-                            tooltip:AddLine(string.format('        %s',
-                                mountData.link:gsub('%[', ''):gsub('%]', '')
-                            ))
+                            tooltip:SetCell(lineNo, 4, mountData.comment)
                         end
                     end
                 end
@@ -275,19 +278,15 @@ function addon:UpdateTooltip(tooltip)
         end)
 
         for _, firstName in pairs(firstSorted) do
-            tooltip:AddLine(string.format('%s', firstName))
+            lineNo = tooltip:AddLine()
+            tooltip:SetCell(lineNo, 1, firstName, nil, nil, 4)
 
             local mountData
             for _, mountData in pairs(miscMounts[firstName].items) do
+                lineNo = tooltip:AddLine()
+                tooltip:SetCell(lineNo, 3, mountData.link:gsub('%[', ''):gsub('%]', ''))
                 if mountData.comment then
-                    tooltip:AddLine(string.format('        %s (%s)',
-                        mountData.link:gsub('%[', ''):gsub('%]', ''),
-                        mountData.comment
-                    ))
-                else
-                    tooltip:AddLine(string.format('        %s',
-                        mountData.link:gsub('%[', ''):gsub('%]', '')
-                    ))
+                    tooltip:SetCell(lineNo, 4, mountData.comment)
                 end
             end
         end
