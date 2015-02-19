@@ -9,6 +9,9 @@ local qtip = LibStub('LibQTip-1.0')
 
 local TOOLTIP_SEPARATOR = { 1, 1, 1, 1, 0.5 }
 
+local COLOR_DUNGEON = { 1, 1, 0, 1 }
+local COLOR_COMMENT = { 0, 1, 0, 1 }
+
 function tableIsEmpty(table)
     for _ in pairs(table) do
         return false
@@ -239,24 +242,36 @@ function addon:UpdateTooltip(tooltip)
 
                     if tableLength(firstData.items) == 1 then
                         lineNo = tooltip:AddLine()
+
                         tooltip:SetCell(lineNo, 1, string.format('%s / %s', firstName, secondName), nil, nil, 4)
+                        tooltip:SetCellTextColor(lineNo, 1, unpack(COLOR_DUNGEON))
                     else
                         if not titlePrinted then
                             lineNo = tooltip:AddLine()
+
                             tooltip:SetCell(lineNo, 1, firstName, nil, nil, 4)
+                            tooltip:SetCellTextColor(lineNo, 1, unpack(COLOR_DUNGEON))
+
                             titlePrinted = 1
                         end
 
                         lineNo = tooltip:AddLine()
+
                         tooltip:SetCell(lineNo, 2, secondName, nil, nil, 3)
+                        tooltip:SetCellTextColor(lineNo, 2, unpack(COLOR_DUNGEON))
                     end
 
                     local mountData
                     for _, mountData in pairs(secondData.items) do
-                        lineNo = tooltip:AddLine()
-                        tooltip:SetCell(lineNo, 3, mountData.link:gsub('%[', ''):gsub('%]', ''))
                         if mountData.comment then
+                            lineNo = tooltip:AddLine()
+                            tooltip:SetCell(lineNo, 3, mountData.link:gsub('%[', ''):gsub('%]', ''))
+
                             tooltip:SetCell(lineNo, 4, mountData.comment)
+                            tooltip:SetCellTextColor(lineNo, 4, unpack(COLOR_COMMENT))
+                        else
+                            lineNo = tooltip:AddLine()
+                            tooltip:SetCell(lineNo, 3, mountData.link:gsub('%[', ''):gsub('%]', ''), nil, nil, 2)
                         end
                     end
                 end
@@ -279,14 +294,21 @@ function addon:UpdateTooltip(tooltip)
 
         for _, firstName in pairs(firstSorted) do
             lineNo = tooltip:AddLine()
+
             tooltip:SetCell(lineNo, 1, firstName, nil, nil, 4)
+            tooltip:SetCellTextColor(lineNo, 1, unpack(COLOR_DUNGEON))
 
             local mountData
             for _, mountData in pairs(miscMounts[firstName].items) do
-                lineNo = tooltip:AddLine()
-                tooltip:SetCell(lineNo, 3, mountData.link:gsub('%[', ''):gsub('%]', ''))
                 if mountData.comment then
+                    lineNo = tooltip:AddLine()
+                    tooltip:SetCell(lineNo, 3, mountData.link:gsub('%[', ''):gsub('%]', ''))
+
                     tooltip:SetCell(lineNo, 4, mountData.comment)
+                    tooltip:SetCellTextColor(lineNo, 4, unpack(COLOR_COMMENT))
+                else
+                    lineNo = tooltip:AddLine()
+                    tooltip:SetCell(lineNo, 3, mountData.link:gsub('%[', ''):gsub('%]', ''), nil, nil, 2)
                 end
             end
         end
