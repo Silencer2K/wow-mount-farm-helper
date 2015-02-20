@@ -61,6 +61,10 @@ function addon:OnInitialize()
     self.icon = LibStub('LibDBIcon-1.0')
     self.icon:Register(addonName, self.ldb, self.db.profile.minimap)
 
+    if not MountJournal_OnLoad then
+        UIParentLoadAddOn('Blizzard_PetJournal')
+    end
+
     local mountId, mountData
     for mountId, mountData in pairs(MFH_DB_MOUNTS) do
         GetItemInfo(mountId)
@@ -331,13 +335,11 @@ function addon:UpdateTooltip(tooltip)
 end
 
 function addon:OpenMountJournal(index)
-    local journal = _G.PetJournalParent
-
-    if not journal:IsShown() then
+    if not PetJournalParent:IsShown() then
         TogglePetJournal()
     end
 
-    PetJournalParent_SetTab(journal, 1)
+    PetJournalParent_SetTab(PetJournalParent, 1)
 
     if index then
         MountJournal_Select(index)
