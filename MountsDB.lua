@@ -3,6 +3,7 @@ MFH_DB_NPC_NAMES = {
     [16152] = "Attumen the Huntsman",
     [19622] = "Kael'thas Sunstrider",
     [23035] = "Anzu",
+    [23577] = "Halazzi",
     [24664] = "Kael'thas Sunstrider",
     [26693] = "Skadi the Ruthless",
     [28859] = "Malygos",
@@ -287,6 +288,17 @@ MFH_DB_MOUNTS = {
                 type = 'raid', npc_id = 52409,
                 zone_id = 800,
                 level = 85, for_sort = 384,
+            },
+        },
+    },
+    [69747] = { -- Amani Battle Bear
+        spell_id = 98204,
+        from = {
+            {
+                type = 'dungeon', subtype = 'heroic', npc_id = 23577,
+                zone_id = 781,
+                level = 85, for_sort = 353,
+                cond = '25_mins',
             },
         },
     },
