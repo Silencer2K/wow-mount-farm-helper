@@ -31,6 +31,9 @@ function addon:OnInitialize()
     self.db = LibStub('AceDB-3.0'):New(addonName .. 'DB', {
         profile = {
             hide_normal = false,
+            hide_raid = false,
+            hide_world = false,
+            hide_quest = false,
             minimap = {
                 hide = false,
             },
@@ -41,20 +44,8 @@ function addon:OnInitialize()
         type = 'launcher',
         text = "Mount Farm Helper",
         icon = 'Interface\\ICONS\\ABILITY_MOUNT_GOLDENGRYPHON',
-
-        OnEnter = function(anchor)
-            if qtip:IsAcquired('MountFarmHelper') and self.tooltip then
-                self.tooltip:Clear()
-            else
-                self.tooltip = qtip:Acquire('MountFarmHelper', 5, 'LEFT', 'LEFT', 'LEFT', 'RIGHT')
-            end
-
-            self:UpdateTooltip(self.tooltip)
-
-            self.tooltip:SmartAnchorTo(anchor)
-            self.tooltip:SetAutoHideDelay(0.05, anchor)
-            self.tooltip:UpdateScrolling()
-            self.tooltip:Show()
+        OnEnter = function(...)
+            self:UpdateTooltip(...)
         end,
     })
 
@@ -103,7 +94,25 @@ function addon:GetNpcName(npcId)
     return npcName
 end
 
-function addon:UpdateTooltip(tooltip)
+function addon:UpdateTooltip(anchor)
+    if qtip:IsAcquired('MountFarmHelper') and self.tooltip then
+        self.tooltip:Clear()
+    else
+        self.tooltip = qtip:Acquire('MountFarmHelper', 5, 'LEFT', 'LEFT', 'LEFT', 'RIGHT')
+    end
+
+    self:UpdateTooltipData(self.tooltip)
+
+    if anchor then
+        self.tooltip:SmartAnchorTo(anchor)
+        self.tooltip:SetAutoHideDelay(0.05, anchor)
+    end
+
+    self.tooltip:UpdateScrolling()
+    self.tooltip:Show()
+end
+
+function addon:UpdateTooltipData(tooltip)
     local i, j
 
     local mountIndexes, playerMounts = {}, {}
@@ -222,79 +231,96 @@ function addon:UpdateTooltip(tooltip)
         if not tableIsEmpty(mountTable.items) then
             tooltip:AddSeparator(unpack(TOOLTIP_SEPARATOR))
 
-            lineNo = tooltip:AddHeader()
-            tooltip:SetCell(lineNo, 1, L['title_' .. mountTable.title], nil, nil, 4)
+            if self.db.profile['hide_' .. mountTable.title] then
+                lineNo = tooltip:AddLine()
+                tooltip:SetCell(lineNo, 1, '|TInterface\\Buttons\\UI-PlusButton-Up:16|t' .. L['title_' .. mountTable.title], nil, nil, 4)
 
-            local firstSorted, firstName = {}
+                tooltip:SetLineScript(lineNo, 'OnMouseUp', function()
+                    self.db.profile['hide_' .. mountTable.title] = false
+                    self:UpdateTooltip()
+                end)
+            else
+                lineNo = tooltip:AddLine()
+                tooltip:SetCell(lineNo, 1, '|TInterface\\Buttons\\UI-MinusButton-Up:16|t' .. L['title_' .. mountTable.title], nil, nil, 4)
 
-            for firstName in pairs(mountTable.items) do
-                table.insert(firstSorted, firstName)
-            end
-
-            table.sort(firstSorted, function(a, b)
-                return mountTable.items[a].sort < mountTable.items[b].sort
-            end)
-
-            for _, firstName in pairs(firstSorted) do
-                local firstData = mountTable.items[firstName]
-
-                local secondSorted, secondName, titlePrinted = {}
-
-                for secondName in pairs(firstData.items) do
-                    table.insert(secondSorted, secondName)
-                end
-
-                table.sort(secondSorted, function(a, b)
-                    return firstData.items[a].sort < firstData.items[b].sort
+                tooltip:SetLineScript(lineNo, 'OnMouseUp', function()
+                    self.db.profile['hide_' .. mountTable.title] = true
+                    self:UpdateTooltip()
                 end)
 
-                for _, secondName in pairs(secondSorted) do
-                    local secondData = firstData.items[secondName]
+                local firstSorted, firstName = {}
 
-                    if tableLength(firstData.items) == 1 then
-                        lineNo = tooltip:AddLine()
+                for firstName in pairs(mountTable.items) do
+                    table.insert(firstSorted, firstName)
+                end
 
-                        tooltip:SetCell(lineNo, 1, string.format('%s / %s', firstName, secondName), nil, nil, 4)
-                        tooltip:SetCellTextColor(lineNo, 1, unpack(COLOR_DUNGEON))
-                    else
-                        if not titlePrinted then
-                            lineNo = tooltip:AddLine()
+                table.sort(firstSorted, function(a, b)
+                    return mountTable.items[a].sort < mountTable.items[b].sort
+                end)
 
-                            tooltip:SetCell(lineNo, 1, firstName, nil, nil, 4)
-                            tooltip:SetCellTextColor(lineNo, 1, unpack(COLOR_DUNGEON))
+                for _, firstName in pairs(firstSorted) do
+                    local firstData = mountTable.items[firstName]
 
-                            titlePrinted = 1
-                        end
+                    local secondSorted, secondName, titlePrinted = {}
 
-                        lineNo = tooltip:AddLine()
-
-                        tooltip:SetCell(lineNo, 2, secondName, nil, nil, 3)
-                        tooltip:SetCellTextColor(lineNo, 2, unpack(COLOR_DUNGEON))
+                    for secondName in pairs(firstData.items) do
+                        table.insert(secondSorted, secondName)
                     end
 
-                    local mountData
-                    for _, mountData in pairs(secondData.items) do
-                        lineNo = tooltip:AddLine()
+                    table.sort(secondSorted, function(a, b)
+                        return firstData.items[a].sort < firstData.items[b].sort
+                    end)
 
-                        if mountData.comment then
-                            tooltip:SetCell(lineNo, 3, mountData.link:gsub('%[', ''):gsub('%]', ''))
+                    for _, secondName in pairs(secondSorted) do
+                        local secondData = firstData.items[secondName]
 
-                            tooltip:SetCell(lineNo, 4, mountData.comment)
-                            tooltip:SetCellTextColor(lineNo, 4, unpack(COLOR_COMMENT))
+                        if tableLength(firstData.items) == 1 then
+                            lineNo = tooltip:AddLine()
+
+                            tooltip:SetCell(lineNo, 1, string.format('%s / %s', firstName, secondName), nil, nil, 4)
+                            tooltip:SetCellTextColor(lineNo, 1, unpack(COLOR_DUNGEON))
                         else
-                            tooltip:SetCell(lineNo, 3, mountData.link:gsub('%[', ''):gsub('%]', ''), nil, nil, 2)
+                            if not titlePrinted then
+                                lineNo = tooltip:AddLine()
+
+                                tooltip:SetCell(lineNo, 1, firstName, nil, nil, 4)
+                                tooltip:SetCellTextColor(lineNo, 1, unpack(COLOR_DUNGEON))
+
+                                titlePrinted = 1
+                            end
+
+                            lineNo = tooltip:AddLine()
+
+                            tooltip:SetCell(lineNo, 2, secondName, nil, nil, 3)
+                            tooltip:SetCellTextColor(lineNo, 2, unpack(COLOR_DUNGEON))
                         end
 
-                        if mountData.mountIndex then
-                            tooltip:SetLineScript(lineNo, 'OnMouseUp', function()
-                                self:OpenMountJournal(mountData.mountIndex)
-                            end)
+                        local mountData
+                        for _, mountData in pairs(secondData.items) do
+                            lineNo = tooltip:AddLine()
+
+                            if mountData.comment then
+                                tooltip:SetCell(lineNo, 3, mountData.link:gsub('%[', ''):gsub('%]', ''))
+
+                                tooltip:SetCell(lineNo, 4, mountData.comment)
+                                tooltip:SetCellTextColor(lineNo, 4, unpack(COLOR_COMMENT))
+                            else
+                                tooltip:SetCell(lineNo, 3, mountData.link:gsub('%[', ''):gsub('%]', ''), nil, nil, 2)
+                            end
+
+                            if mountData.mountIndex then
+                                tooltip:SetLineScript(lineNo, 'OnMouseUp', function()
+                                    self:OpenMountJournal(mountData.mountIndex)
+                                end)
+                            end
                         end
                     end
                 end
             end
         end
     end
+
+    tooltip:AddLine()
 end
 
 function addon:OpenMountJournal(index)
