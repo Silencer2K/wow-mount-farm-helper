@@ -41,13 +41,15 @@ function addon:OnInitialize()
     }, true)
 
     self.ldb = LibStub('LibDataBroker-1.1'):NewDataObject(addonName, {
-        type = 'data source',
+        type = 'launcher',
         icon = 'Interface\\ICONS\\ABILITY_MOUNT_GOLDENGRYPHON',
         label = "Mount Farm Helper",
         OnEnter = function(...)
             self:UpdateTooltip(...)
         end,
         OnLeave = function()
+        end,
+        OnClick = function()
         end,
     })
 
