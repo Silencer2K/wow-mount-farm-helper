@@ -99,24 +99,26 @@ function addon:GetNpcName(npcId)
 end
 
 function addon:UpdateTooltip(anchor)
-    if qtip:IsAcquired('MountFarmHelper') and self.tooltip then
-        self.tooltip:Clear()
-    else
-        self.tooltip = qtip:Acquire('MountFarmHelper', 5, 'LEFT', 'LEFT', 'LEFT', 'RIGHT')
+    if not InCombatLockdown() then
+        if qtip:IsAcquired('MountFarmHelper') and self.tooltip then
+            self.tooltip:Clear()
+        else
+            self.tooltip = qtip:Acquire('MountFarmHelper', 5, 'LEFT', 'LEFT', 'LEFT', 'RIGHT')
+        end
+
+        self:UpdateTooltipData(self.tooltip)
+
+        if anchor then
+            self.tooltip:SmartAnchorTo(anchor)
+            self.tooltip:SetAutoHideDelay(0.05, anchor)
+        end
+
+        self.tooltip:UpdateScrolling()
+        self.tooltip:Show()
     end
-
-    self:UpdateTooltipData(self.tooltip)
-
-    if anchor then
-        self.tooltip:SmartAnchorTo(anchor)
-        self.tooltip:SetAutoHideDelay(0.05, anchor)
-    end
-
-    self.tooltip:UpdateScrolling()
-    self.tooltip:Show()
 end
 
-function addon:UpdateTooltipData(tooltip)
+function addon:BuildTooltipData()
     local i, j
 
     local mountIndexes, playerMounts = {}, {}
@@ -222,16 +224,20 @@ function addon:UpdateTooltipData(tooltip)
         end
     end
 
+    return {
+        { items = normalMounts, title = 'normal' },
+        { items = raidMounts  , title = 'raid'   },
+        { items = worldMounts , title = 'world'  },
+        { items = questMounts , title = 'quest'  },
+    }
+end
+
+function addon:UpdateTooltipData(tooltip)
     local lineNo = tooltip:AddHeader();
     tooltip:SetCell(lineNo, 1, L.title, nil, nil, 4)
 
     local mountTable
-    for _, mountTable in pairs({
-        { items = normalMounts, title = 'normal' },
-        { items = raidMounts, title = 'raid' },
-        { items = worldMounts, title = 'world' },
-        { items = questMounts, title = 'quest' },
-    }) do
+    for _, mountTable in pairs(self:BuildTooltipData()) do
         if not tableIsEmpty(mountTable.items) then
             tooltip:AddSeparator(unpack(TOOLTIP_SEPARATOR))
 
