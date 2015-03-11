@@ -11,4 +11,5 @@
     <Script file="libs\LibBabble-Boss-3.0\LibBabble-3.0.lua" />
     <Script file="libs\LibBabble-Boss-3.0\LibBabble-Boss-3.0.lua" />
     <Script file="libs\LibQTip-1.0\LibQTip-1.0.lua" />
+    <Script file="libs\S2KTools-1.0\S2KTools-1.0.lua" />
 </Ui>

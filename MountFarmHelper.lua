@@ -12,21 +12,6 @@ local TOOLTIP_SEPARATOR = { 1, 1, 1, 1, 0.5 }
 local COLOR_DUNGEON = { 1, 1, 0, 1 }
 local COLOR_COMMENT = { 0, 1, 0, 1 }
 
-function tableIsEmpty(table)
-    for _ in pairs(table) do
-        return false
-    end
-    return true
-end
-
-function tableLength(table)
-    local count = 0
-    for _ in pairs(table) do
-        count = count + 1
-    end
-    return count
-end
-
 function addon:OnInitialize()
     self.db = LibStub('AceDB-3.0'):New(addonName .. 'DB', {
         profile = {
