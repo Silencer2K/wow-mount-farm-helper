@@ -233,13 +233,13 @@ function addon:BuildTooltipData()
 end
 
 function addon:UpdateTooltipData(tooltip)
-    local lineNo = tooltip:AddHeader();
-    tooltip:SetCell(lineNo, 1, L.title, nil, nil, 4)
+    local lineNo, mountTable
 
-    local mountTable
     for _, mountTable in pairs(self:BuildTooltipData()) do
         if not tableIsEmpty(mountTable.items) then
-            tooltip:AddSeparator(unpack(TOOLTIP_SEPARATOR))
+            if lineNo then
+                tooltip:AddSeparator(unpack(TOOLTIP_SEPARATOR))
+            end
 
             if self.db.profile['hide_' .. mountTable.title] then
                 lineNo = tooltip:AddLine()
