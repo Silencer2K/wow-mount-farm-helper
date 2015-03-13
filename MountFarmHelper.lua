@@ -4,6 +4,7 @@ LibStub('AceAddon-3.0'):NewAddon(addon, addonName, 'AceEvent-3.0')
 
 local L = LibStub('AceLocale-3.0'):GetLocale(addonName)
 local LBB = LibStub('LibBabble-Boss-3.0'):GetUnstrictLookupTable()
+local LBZ = LibStub('LibBabble-SubZone-3.0'):GetUnstrictLookupTable()
 
 local qtip = LibStub('LibQTip-1.0')
 local S2K = LibStub('S2KTools-1.0')
@@ -187,7 +188,8 @@ function addon:BuildTooltipData()
                             npcName = self:GetNpcName(mountSource.npc_id)
                         end
 
-                        local raidSave = mountSource.raid_save and LBB[mountSource.raid_save] or npcName
+                        local raidSaveZone = mountSource.raid_save_zone and LBZ[mountSource.raid_save_zone] or zoneName
+                        local raidSaveBoss = mountSource.raid_save_boss and LBB[mountSource.raid_save_boss] or npcName
 
                         local comment
                         if mountSource.subtype and mountSource.type ~= 'special' then
@@ -201,7 +203,7 @@ function addon:BuildTooltipData()
                         if mountSource.type == 'dungeon' and not mountSource.subtype then
                             add = 1
                         elseif mountSource.type == 'dungeon' or mountSource.type == 'raid' then
-                            add = not(savedRaids[zoneName] and (type(savedRaids[zoneName]) ~= 'table' or savedRaids[zoneName][raidSave]))
+                            add = not(savedRaids[raidSaveZone] and (type(savedRaids[raidSaveZone]) ~= 'table' or savedRaids[raidSaveZone][raidSaveBoss]))
                         elseif mountSource.quest_id then
                             add = not IsQuestFlaggedCompleted(mountSource.quest_id)
                         end
