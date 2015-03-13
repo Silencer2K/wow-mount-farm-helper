@@ -74,6 +74,7 @@ MFH_DB_MOUNTS = {
                 type = 'dungeon', subtype = 'heroic', npc_id = 23035,
                 zone_id = 723,
                 level = 70, for_sort = 115,
+                raid_save_zone = 'Auchindoun: Sethekk Halls',
             },
         },
     },
