@@ -64,6 +64,7 @@ MFH_DB_MOUNTS = {
                 type = 'raid', npc_id = 19622,
                 zone_id = 782,
                 level = 70, for_sort = 141,
+                dont_autoupdate = 1,
             },
         },
     },

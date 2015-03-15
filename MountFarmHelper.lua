@@ -1,6 +1,6 @@
 local addonName, addon = ...
 
-LibStub('AceAddon-3.0'):NewAddon(addon, addonName, 'AceEvent-3.0')
+LibStub('AceAddon-3.0'):NewAddon(addon, addonName, 'AceEvent-3.0', 'AceTimer-3.0')
 
 local L = LibStub('AceLocale-3.0'):GetLocale(addonName)
 local LBB = LibStub('LibBabble-Boss-3.0'):GetUnstrictLookupTable()
@@ -64,7 +64,7 @@ function addon:OnInitialize()
             if mountSource.npc_id then
                 self:GetNpcName(mountSource.npc_id)
 
-                if mountSource.type == 'raid' or (mountSource.type == 'dungeon' and mountSource.subtype) then
+                if mountSource.type == 'raid' or (mountSource.type == 'dungeon' and mountSource.subtype) and not mountSource.dont_autoupdate then
                     self.trackNpc[mountSource.npc_id] = 1
                 end
             end
@@ -107,6 +107,10 @@ function addon:OnCombatEvent(event, timeStamp, logEvent, hideCaster,
         if type == 'Creature' or type == 'Vehicle' then
             if (logEvent == 'UNIT_DIED' or logEvent == 'PARTY_KILL') and self.trackNpc[id] then
                 RequestRaidInfo()
+
+                self:ScheduleTimer(function()
+                    RequestRaidInfo()
+                end, 5)
             end
         end
     end
