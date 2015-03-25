@@ -86,6 +86,7 @@ MFH_DB_MOUNTS = {
                 type = 'dungeon', subtype = 'heroic', npc_id = 24664,
                 zone_id = 798,
                 level = 70, for_sort = 125,
+                raid_save_zone = "Magister's Terrace",
             },
         },
     },
