@@ -154,16 +154,20 @@ function addon:BuildTooltipData()
     for i = 1, GetNumSavedInstances() do
         local raidName, _, _, _, locked, extended, _, _, _, _, numBosses = GetSavedInstanceInfo(i)
         if locked and not extended then
-            if numBosses > 0 then
-                savedRaids[raidName] = {}
+            savedRaids[raidName] = {}
 
-                for j = 1, numBosses do
-                    local bossName, _, killed = GetSavedInstanceEncounterInfo(i, j)
-                    if killed then
-                        savedRaids[raidName][bossName] = 1
-                    end
+            local numRemains = 0
+
+            for j = 1, numBosses do
+                local bossName, _, killed = GetSavedInstanceEncounterInfo(i, j)
+                if killed then
+                    savedRaids[raidName][bossName] = 1
+                else
+                    numRemains = numRemains + 1
                 end
-            else
+            end
+
+            if numRemains < 1 then
                 savedRaids[raidName] = 1
             end
         end
