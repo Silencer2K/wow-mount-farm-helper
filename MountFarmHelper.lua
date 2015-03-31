@@ -86,11 +86,10 @@ function addon:GetNpcName(npcId)
     local npcName = _G[tooltip:GetName() .. 'TextLeft1']:GetText()
 
     if not npcName then
-        npcName = MFH_DB_NPC_NAMES[npcId]
-        if not npcName then
-            npcName = string.format('npc#%d', npcId)
+        if MFH_DB_BOSSES[npcId] and MFH_DB_BOSSES[npcId].name then
+            npcName = LBB[MFH_DB_BOSSES[npcId].name] or MFH_DB_BOSSES[npcId].name
         else
-            npcName = LBB[npcName] or npcName
+            npcName = string.format('npc#%d', npcId)
         end
     end
 
@@ -175,6 +174,7 @@ function addon:BuildTooltipData()
 
     local playerFaction = string.lower(UnitFactionGroup('player'))
     local playerLevel = UnitLevel('player')
+    local playerZoneName = GetRealZoneText()
 
     local normalMounts, raidMounts, worldMounts, questMounts = {}, {}, {}, {}
 
@@ -196,8 +196,8 @@ function addon:BuildTooltipData()
                             npcName = self:GetNpcName(mountSource.npc_id)
                         end
 
-                        local raidSaveZone = mountSource.raid_save_zone and LBZ[mountSource.raid_save_zone] or zoneName
-                        local raidSaveBoss = mountSource.raid_save_boss and LBB[mountSource.raid_save_boss] or npcName
+                        local raidSaveZone = MFH_DB_ZONES[mountSource.zone_id] and MFH_DB_ZONES[mountSource.zone_id].raid and LBZ[MFH_DB_ZONES[mountSource.zone_id].raid] or zoneName
+                        local raidSaveBoss = MFH_DB_BOSSES[mountSource.npc_id] and MFH_DB_BOSSES[mountSource.npc_id].raid and LBB[MFH_DB_BOSSES[mountSource.npc_id].raid] or npcName
 
                         local comment
                         if mountSource.subtype and mountSource.type ~= 'special' then
@@ -217,19 +217,35 @@ function addon:BuildTooltipData()
                         end
 
                         if add then
-                            local zoneData
+                            local zoneData = {
+                                items = {}, sort = mountSource.for_sort,
+                                isCurrent = playerZoneName == (MFH_DB_ZONES[mountSource.zone_id] and MFH_DB_ZONES[mountSource.zone_id].map and LBZ[MFH_DB_ZONES[mountSource.zone_id].map] or zoneName),
+                            }
+
                             if mountSource.type == 'dungeon' and not mountSource.subtype then
-                                zoneData = normalMounts[zoneName] or { items = {}, sort = mountSource.for_sort }
-                                normalMounts[zoneName] = zoneData
+                                if normalMounts[zoneName] then
+                                    zoneData = normalMounts[zoneName]
+                                else
+                                    normalMounts[zoneName] = zoneData
+                                end
                             elseif mountSource.type == 'dungeon' or mountSource.type == 'raid' then
-                                zoneData = raidMounts[zoneName] or { items = {}, sort = mountSource.for_sort }
-                                raidMounts[zoneName] = zoneData
+                                if raidMounts[zoneName] then
+                                    zoneData = raidMounts[zoneName]
+                                else
+                                    raidMounts[zoneName] = zoneData
+                                end
                             elseif mountSource.type == 'world' then
-                                zoneData = worldMounts[zoneName] or { items = {}, sort = mountSource.for_sort }
-                                worldMounts[zoneName] = zoneData
+                                if worldMounts[zoneName] then
+                                    zoneData = worldMounts[zoneName]
+                                else
+                                    worldMounts[zoneName] = zoneData
+                                end
                             else
-                                zoneData = questMounts[zoneName] or { items = {}, sort = mountSource.for_sort }
-                                questMounts[zoneName] = zoneData
+                                if questMounts[zoneName] then
+                                    zoneData = questMounts[zoneName]
+                                else
+                                    questMounts[zoneName] = zoneData
+                                end
                             end
 
                             zoneData.sort = min(zoneData.sort, mountSource.for_sort)
@@ -290,13 +306,13 @@ function addon:UpdateTooltipData(tooltip)
                 end
 
                 table.sort(firstSorted, function(a, b)
-                    if a == zoneName then
-                        if b == zoneName then
-                            return petTable.items[a].sort < petTable.items[b].sort
+                    if mountTable.items[a].isCurrent then
+                        if mountTable.items[b].isCurrent then
+                            return mountTable.items[a].sort < mountTable.items[b].sort
                         end
                         return true
                     end
-                    if b == zoneName then
+                    if mountTable.items[b].isCurrent then
                         return false
                     end
                     return mountTable.items[a].sort < mountTable.items[b].sort
