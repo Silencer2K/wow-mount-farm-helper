@@ -3,6 +3,13 @@ Mount Farm Helper
 
 Add-on that shows which mounts can be farmed this week.
 
+Chat commands
+-------------
+
+* /mfh toggleicon - toggles minimap icon
+* /mfh showicon - shows minimap icon
+* /mfh hideicon - hides minimap icon
+
 Links
 -----
 
