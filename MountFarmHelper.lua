@@ -1,6 +1,6 @@
 local addonName, addon = ...
 
-LibStub('AceAddon-3.0'):NewAddon(addon, addonName, 'AceEvent-3.0', 'AceTimer-3.0')
+LibStub('AceAddon-3.0'):NewAddon(addon, addonName, 'AceEvent-3.0', 'AceTimer-3.0', 'AceConsole-3.0')
 
 local L = LibStub('AceLocale-3.0'):GetLocale(addonName)
 local LBB = LibStub('LibBabble-Boss-3.0'):GetUnstrictLookupTable()
@@ -49,6 +49,8 @@ function addon:OnInitialize()
         addon:OnCombatEvent(...)
     end)
 
+    self:RegisterChatCommand('mfh', 'OnChatCommand')
+
     if not MountJournal_OnLoad then
         UIParentLoadAddOn('Blizzard_Collections')
     end
@@ -68,6 +70,27 @@ function addon:OnInitialize()
                     self.trackNpc[mountSource.npc_id] = 1
                 end
             end
+        end
+    end
+end
+
+function addon:OnChatCommand(message)
+    local cmd, pos = self:GetArgs(message, 1, 1)
+    local param = message:sub(pos)
+
+    if cmd then
+        if cmd == 'toggleicon' or cmd == 'switchicon' then
+            self.db.profile.minimap.hide = not self.db.profile.minimap.hide
+        elseif cmd == 'hideicon' then
+            self.db.profile.minimap.hide = true
+        elseif cmd == 'showicon' then
+            self.db.profile.minimap.hide = false
+        end
+
+        if self.db.profile.minimap.hide then
+            self.icon:Hide(addonName)
+        else
+            self.icon:Show(addonName)
         end
     end
 end
