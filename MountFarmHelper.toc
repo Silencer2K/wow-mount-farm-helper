@@ -21,3 +21,5 @@ locales\zhTW.lua
 
 MountsDB.lua
 MountFarmHelper.lua
+
+Config.lua
