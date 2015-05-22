@@ -73,6 +73,15 @@ function addon:OnInitialize()
             end
         end
     end
+
+    self:ScheduleTimer(function()
+        if LibStub('AceAddon-3.0'):GetAddon('AltCraft', true) then
+            AltCraftMFHTabFrame:SetParent(AltCraftFrame)
+            AltCraftMFHTabFrame:SetPoint('TOPLEFT')
+
+            AltCraftFrame:AddTab(AltCraftMFHTabFrame, 'Mount Farm Helper')
+        end
+    end, 0.5)
 end
 
 function addon:GetNpcName(npcId)
