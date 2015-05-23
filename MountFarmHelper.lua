@@ -38,7 +38,17 @@ function addon:OnInitialize()
         end,
         OnLeave = function()
         end,
-        OnClick = function()
+        OnClick = function(obj, button)
+            if button == 'RightButton' then
+                InterfaceOptionsFrame_OpenToCategory(addonName)
+            elseif self.ac then
+                if AltCraftFrame:IsShown() and AltCraftMFHTabFrame:IsShown() then
+                    AltCraftFrame:Hide()
+                else
+                    AltCraftFrame:Show()
+                    AltCraftFrame:OnSelectTab(self.acTabNum)
+                end
+            end
         end,
     })
 
@@ -75,8 +85,9 @@ function addon:OnInitialize()
     end
 
     self:ScheduleTimer(function()
-        if LibStub('AceAddon-3.0'):GetAddon('AltCraft', true) then
-            AltCraftFrame:AddTab(AltCraftMFHTabFrame, 'Mount Farm Helper')
+        self.ac = LibStub('AceAddon-3.0'):GetAddon('AltCraft', true)
+        if self.ac then
+            self.acTabNum = AltCraftFrame:AddTab(AltCraftMFHTabFrame, 'Mount Farm Helper')
         end
     end, 0.5)
 end
