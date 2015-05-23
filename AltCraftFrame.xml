@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
     <Button name="AltCraftMFHButtonTemplate" virtual="true">
-        <Size x="714" y="60" />
-        <Anchors>
-            <Anchor point="LEFT" x="2" y="0" />
-        </Anchors>
+        <Size x="718" y="60" />
         <Layers>
             <Layer level="BACKGROUND">
                 <Texture name="$parentTopLeft" file="Interface\AuctionFrame\UI-AuctionItemNameFrame">
                     <Size x="10" y="10" />
                     <Anchors>
-                        <Anchor point="TOPLEFT" x="0" y="-1" />
+                        <Anchor point="TOPLEFT" x="2" y="-1" />
                     </Anchors>
                     <TexCoords left="0" right="0.078125" top="0" bottom="0.3125" />
                 </Texture>
                 <Texture name="$parentTopRight" file="Interface\AuctionFrame\UI-AuctionItemNameFrame">
                     <Size x="10" y="10" />
                     <Anchors>
-                        <Anchor point="TOPRIGHT" x="0" y="-1" />
+                        <Anchor point="TOPRIGHT" x="-2" y="-1" />
                     </Anchors>
                     <TexCoords left="0.75" right="0.828125" top="0" bottom="0.3125" />
                 </Texture>
@@ -32,14 +29,14 @@
                 <Texture name="$parentBottomLeft" file="Interface\AuctionFrame\UI-AuctionItemNameFrame">
                     <Size x="10" y="10" />
                     <Anchors>
-                        <Anchor point="BOTTOMLEFT" x="0" y="1" />
+                        <Anchor point="BOTTOMLEFT" x="2" y="1" />
                     </Anchors>
                     <TexCoords left="0" right="0.078125" top="0.6875" bottom="1" />
                 </Texture>
                 <Texture name="$parentBottomRight" file="Interface\AuctionFrame\UI-AuctionItemNameFrame">
                     <Size x="10" y="10" />
                     <Anchors>
-                        <Anchor point="BOTTOMRIGHT" x="0" y="1" />
+                        <Anchor point="BOTTOMRIGHT" x="-2" y="1" />
                     </Anchors>
                     <TexCoords left="0.75" right="0.828125" top="0.6875" bottom="1" />
                 </Texture>
