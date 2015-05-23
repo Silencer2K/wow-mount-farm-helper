@@ -71,6 +71,42 @@
                 </Texture>
             </Layer>
         </Layers>
+        <HighlightTexture file="Interface\FriendsFrame\UI-FriendsFrame-HighlightBar" alphaMode="ADD" setAllPoints="true" />
+        <Frames>
+            <Button name="$parentDeleteButton" parentKey="DeleteButton">
+                <Size x="14" y="14" />
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT" x="-4" y="5" />
+                </Anchors>
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <Texture file="Interface\Buttons\UI-GroupLoot-Pass-Up" alpha="0.5" parentKey="texture" />
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnEnter><![CDATA[
+                        self:GetParent():LockHighlight()
+                        self.texture:SetAlpha(1.0)
+                    ]]></OnEnter>
+                    <OnLeave><![CDATA[
+                        self:GetParent():UnlockHighlight()
+                        self.texture:SetAlpha(0.5)
+                    ]]></OnLeave>
+                    <OnMouseDown><![CDATA[
+                        self.texture:SetPoint("TOPLEFT", 1, -1)
+                    ]]></OnMouseDown>
+                    <OnMouseUp><![CDATA[
+                        self.texture:SetPoint("TOPLEFT", 0, 0)
+                    ]]></OnMouseUp>
+                </Scripts>
+            </Button>
+        </Frames>
+        <NormalTexture file="Interface\ICONS\ABILITY_MOUNT_GOLDENGRYPHON" name="$parentIcon" parentKey="icon">
+            <Size x="52" y="52" />
+            <Anchors>
+                <Anchor point="TOPLEFT" x="5" y="-4" />
+            </Anchors>
+        </NormalTexture>
     </Button>
     <Frame name="AltCraftMFHTabFrame" hidden="true">
         <Size x="768" y="447" />
