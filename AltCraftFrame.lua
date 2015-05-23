@@ -11,9 +11,9 @@ end
 function frame:OnShow()
     local parent = self:GetParent()
 
-    parent.TopLeft:SetTexture('Interface\\Addons\\AltCraft\\assets\\frame\\tl3')
-    parent.Top:SetTexture('Interface\\Addons\\AltCraft\\assets\\frame\\t3')
-    parent.TopRight:SetTexture('Interface\\Addons\\AltCraft\\assets\\frame\\tr3')
+    parent.TopLeft:SetTexture('Interface\\Addons\\AltCraft\\assets\\frame\\tl')
+    parent.Top:SetTexture('Interface\\Addons\\AltCraft\\assets\\frame\\t')
+    parent.TopRight:SetTexture('Interface\\Addons\\AltCraft\\assets\\frame\\tr')
 
     parent.BottomLeft:SetTexture('Interface\\Addons\\AltCraft\\assets\\frame\\bl')
 
