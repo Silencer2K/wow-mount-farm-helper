@@ -44,6 +44,17 @@ function frame.ListScroll:OnInitialize()
     self:Update()
 end
 
+function frame.ListScroll:OnUpdate()
+    local button
+    for button in valuesIterator(self.buttons) do
+        if button:IsMouseOver() then
+            button.DeleteButton:Show()
+        else
+            button.DeleteButton:Hide()
+        end
+    end
+end
+
 function frame.ListScroll:Update()
     local numRows = 20
 

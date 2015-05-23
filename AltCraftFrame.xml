@@ -73,7 +73,7 @@
         </Layers>
         <HighlightTexture file="Interface\FriendsFrame\UI-FriendsFrame-HighlightBar" alphaMode="ADD" setAllPoints="true" />
         <Frames>
-            <Button name="$parentDeleteButton" parentKey="DeleteButton">
+            <Button name="$parentDeleteButton" parentKey="DeleteButton" visible="false">
                 <Size x="14" y="14" />
                 <Anchors>
                     <Anchor point="BOTTOMRIGHT" x="-4" y="5" />
@@ -148,6 +148,11 @@
                         </Anchors>
                     </Slider>
                 </Frames>
+                <Scripts>
+                    <OnUpdate><![CDATA[
+                        self:OnUpdate()
+                    ]]></OnUpdate>
+                </Scripts>
             </ScrollFrame>
         </Frames>
         <Scripts>
