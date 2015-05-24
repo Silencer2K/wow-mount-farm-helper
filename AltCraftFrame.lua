@@ -56,7 +56,8 @@ function frame.ListScroll:OnUpdate()
 end
 
 function frame.ListScroll:Update()
-    local numRows = 20
+    local list = addon:BuildAltCraftList()
+    local numRows = #list
 
     HybridScrollFrame_Update(self, numRows * LIST_SCROLL_ITEM_HEIGHT, self:GetHeight())
 
@@ -65,5 +66,25 @@ function frame.ListScroll:Update()
     local i
     for i = 1, #self.buttons do
         local button = self.buttons[i]
+        local item = list[i + scrollOffset]
+
+        if scrollOffset + i <= numRows then
+            button.data = item
+
+            button:Show()
+
+            button.Icon:SetTexture(item.icon)
+            button.Item:SetText(item.link:gsub('[%[%]]', ''))
+
+            if item.comment then
+                button.Zone:SetText(string.format('%s (%s)', item.zone, item.comment))
+            else
+                button.Zone:SetText(item.zone)
+            end
+
+            button.Source:SetText(item.source)
+        else
+            button:Hide()
+        end
     end
 end

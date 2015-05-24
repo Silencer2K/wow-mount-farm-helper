@@ -291,6 +291,50 @@ function addon:BuildTooltipData()
     }
 end
 
+function addon:BuildAltCraftList()
+    local list = {}
+
+    local itemId, data
+    for itemId, data in pairs(MFH_DB_MOUNTS) do
+        local name, link, icon = unpackByIndex({ GetItemInfo(itemId) }, 1, 2, 10 )
+
+        local source
+        for _, source in pairs(data.from) do
+            local zoneName = GetMapNameByID(source.zone_id)
+
+            local npcName
+            if source.type == 'special' then
+                npcName = L['special_' .. source.subtype]
+            else
+                npcName = self:GetNpcName(source.npc_id)
+            end
+
+            local comment
+            if source.subtype and source.type ~= 'special' then
+                comment = L['type_' .. source.subtype]
+            end
+            if source.cond then
+                comment = (comment and (comment .. ' + ') or '') .. L['cond_' .. source.cond]
+            end
+
+            table.insert(list, {
+                itemId  = itemId,
+                name    = name,
+                link    = link,
+                icon    = icon,
+                zone    = zoneName,
+                source  = npcName,
+                comment = comment,
+                sort    = source.for_sort,
+            })
+        end
+    end
+
+    table.sort(list, function(a, b) return a.sort < b.sort end)
+
+    return list
+end
+
 function addon:UpdateTooltipData(tooltip)
     local lineNo, mountTable
 
