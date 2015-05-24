@@ -9,6 +9,8 @@ local frame = AltCraftMFHTabFrame
 function frame:OnInitialize()
     self.Title:SetText("Mount Farm Helper")
 
+    self.RestoreButton:SetText(L.btn_restore_all)
+
     self.ListScroll:OnInitialize()
 end
 
@@ -26,12 +28,27 @@ function frame:OnShow()
     self:Update()
 end
 
+function frame:OnSelectItem(button)
+    if self.selectedItem and self.selectedItem == button.data.itemId then
+        self.selectedItem = nil
+    else
+        self.selectedItem = button.data.itemId
+    end
+    self:Update()
+end
+
+function frame:OnDeleteClick()
+end
+
+function frame:OnRestoreClick()
+end
+
 function frame:Update(what)
     if what then
         return
     end
 
-    self.ListScroll:OnInitialize()
+    self.ListScroll:Update()
 end
 
 function frame.ListScroll:OnInitialize()
@@ -49,15 +66,16 @@ function frame.ListScroll:OnUpdate()
     for button in valuesIterator(self.buttons) do
         if button:IsMouseOver() then
             button.Highlight:Show()
-            button.DeleteButton:Show()
 
             if GameTooltip:IsOwned(button.Icon) then
                 GameTooltip:SetOwner(button.Icon, "ANCHOR_RIGHT")
                 GameTooltip:SetItemByID(button.data.itemId)
             end
+
+        elseif self:GetParent().selectedItem == button.data.itemId then
+            button.Highlight:Show()
         else
             button.Highlight:Hide()
-            button.DeleteButton:Hide()
         end
     end
 end

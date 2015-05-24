@@ -115,31 +115,6 @@
                     ]]></OnLeave>
                 </Scripts>
             </Frame>
-            <Button name="$parentDeleteButton" parentKey="DeleteButton" visible="false">
-                <Size x="14" y="14" />
-                <Anchors>
-                    <Anchor point="BOTTOMRIGHT" x="-4" y="5" />
-                </Anchors>
-                <Layers>
-                    <Layer level="ARTWORK">
-                        <Texture file="Interface\Buttons\UI-GroupLoot-Pass-Up" alpha="0.5" parentKey="texture" />
-                    </Layer>
-                </Layers>
-                <Scripts>
-                    <OnEnter><![CDATA[
-                        self.texture:SetAlpha(1.0)
-                    ]]></OnEnter>
-                    <OnLeave><![CDATA[
-                        self.texture:SetAlpha(0.5)
-                    ]]></OnLeave>
-                    <OnMouseDown><![CDATA[
-                        self.texture:SetPoint("TOPLEFT", 1, -1)
-                    ]]></OnMouseDown>
-                    <OnMouseUp><![CDATA[
-                        self.texture:SetPoint("TOPLEFT", 0, 0)
-                    ]]></OnMouseUp>
-                </Scripts>
-            </Button>
             <Frame name="$parentHighlight" parentKey="Highlight" visible="false">
                 <Anchors>
                     <Anchor point="TOPLEFT" />
@@ -152,6 +127,11 @@
                 </Layers>
             </Frame>
         </Frames>
+        <Scripts>
+            <OnClick><![CDATA[
+                self:GetParent():GetParent():GetParent():OnSelectItem(self)
+            ]]></OnClick>
+        </Scripts>
     </Button>
     <Frame name="AltCraftMFHTabFrame" hidden="true">
         <Size x="768" y="447" />
@@ -199,6 +179,54 @@
                     ]]></OnUpdate>
                 </Scripts>
             </ScrollFrame>
+            <Button name="$parentDeleteButton" inherits="UIPanelButtonTemplate" parentKey="DeleteButton" text="DELETE">
+                <Size x="80" y="22" />
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativeTo="$parentListScroll" relativePoint="BOTTOMRIGHT">
+                        <Offset>
+                            <AbsDimension x="21" y="-3" />
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="BORDER">
+                        <Texture file="Interface\FrameGeneral\UI-Frame">
+                            <Size x="13" y="25" />
+                            <Anchors>
+                                <Anchor point="TOPRIGHT" relativePoint="TOPLEFT" x="5" y="1" />
+                            </Anchors>
+                            <TexCoords left="0.00781250" right="0.10937500" top="0.75781250" bottom="0.95312500" />
+                        </Texture>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnClick><![CDATA[
+                        self:GetParent():OnDeleteClick()
+                    ]]></OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentRestoreButton" inherits="UIPanelButtonTemplate" parentKey="RestoreButton">
+                <Size x="120" y="22" />
+                <Anchors>
+                    <Anchor point="RIGHT" relativeTo="$parentDeleteButton" relativePoint="LEFT" />
+                </Anchors>
+                <Layers>
+                    <Layer level="BORDER">
+                        <Texture file="Interface\FrameGeneral\UI-Frame">
+                            <Size x="13" y="25" />
+                            <Anchors>
+                                <Anchor point="TOPRIGHT" relativePoint="TOPLEFT" x="5" y="1" />
+                            </Anchors>
+                            <TexCoords left="0.00781250" right="0.10937500" top="0.75781250" bottom="0.95312500" />
+                        </Texture>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnClick><![CDATA[
+                        self:GetParent():OnRestoreClick()
+                    ]]></OnClick>
+                </Scripts>
+            </Button>
         </Frames>
         <Scripts>
             <OnShow><![CDATA[
