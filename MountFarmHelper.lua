@@ -292,7 +292,7 @@ function addon:BuildTooltipData()
 end
 
 function addon:BuildAltCraftList()
-    local list = {}
+    local list, added = {}, {}
 
     local itemId, data
     for itemId, data in pairs(MFH_DB_MOUNTS) do
@@ -317,16 +317,34 @@ function addon:BuildAltCraftList()
                 comment = (comment and (comment .. ' + ') or '') .. L['cond_' .. source.cond]
             end
 
-            table.insert(list, {
-                itemId  = itemId,
-                name    = name,
-                link    = link,
-                icon    = icon,
-                zone    = zoneName,
-                source  = npcName,
-                comment = comment,
-                sort    = source.for_sort,
-            })
+            if added[itemId] then
+                table.insert(added[itemId].sources, {
+                    zone    = zoneName,
+                    source  = npcName,
+                    comment = comment,
+                    sort    = source.for_sort,
+                })
+
+                table.sort(added[itemId].sources, function(a, b) return a.sort < b.sort end)
+
+                added[itemId].sort = added[itemId].sources[1].sort
+            else
+                added[itemId] = {
+                    itemId  = itemId,
+                    name    = name,
+                    link    = link,
+                    icon    = icon,
+                    sort    = source.for_sort,
+                    sources = {{
+                        zone    = zoneName,
+                        source  = npcName,
+                        comment = comment,
+                        sort    = source.for_sort,
+                    }},
+                }
+
+                table.insert(list, added[itemId])
+            end
         end
     end
 

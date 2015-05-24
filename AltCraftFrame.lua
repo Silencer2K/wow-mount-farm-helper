@@ -76,13 +76,13 @@ function frame.ListScroll:Update()
             button.Icon:SetTexture(item.icon)
             button.Item:SetText(item.link:gsub('[%[%]]', ''))
 
-            if item.comment then
-                button.Zone:SetText(string.format('%s (%s)', item.zone, item.comment))
+            if item.sources[1].comment then
+                button.Zone:SetText(string.format('%s (%s)', item.sources[1].zone, item.sources[1].comment))
             else
-                button.Zone:SetText(item.zone)
+                button.Zone:SetText(item.sources[1].zone)
             end
 
-            button.Source:SetText(item.source)
+            button.Source:SetText(item.sources[1].source)
         else
             button:Hide()
         end
