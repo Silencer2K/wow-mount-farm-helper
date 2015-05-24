@@ -48,8 +48,15 @@ function frame.ListScroll:OnUpdate()
     local button
     for button in valuesIterator(self.buttons) do
         if button:IsMouseOver() then
+            button.Highlight:Show()
             button.DeleteButton:Show()
+
+            if GameTooltip:IsOwned(button.Icon) then
+                GameTooltip:SetOwner(button.Icon, "ANCHOR_RIGHT")
+                GameTooltip:SetItemByID(button.data.itemId)
+            end
         else
+            button.Highlight:Hide()
             button.DeleteButton:Hide()
         end
     end
@@ -73,7 +80,7 @@ function frame.ListScroll:Update()
 
             button:Show()
 
-            button.Icon:SetTexture(item.icon)
+            button.Icon.Texture:SetTexture(item.icon)
             button.Item:SetText(item.link:gsub('[%[%]]', ''))
 
             if item.sources[1].comment then
