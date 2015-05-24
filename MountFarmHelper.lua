@@ -83,8 +83,8 @@ function addon:OnInitialize()
     local itemId, itemData
     for itemId, itemData in pairs(MFH_DB_MOUNTS) do
         GetItemInfo(itemId)
-        local itemSource
 
+        local itemSource
         for _, itemSource in pairs(itemData.from) do
             if itemSource.npc_id then
                 self:GetNpcName(itemSource.npc_id)
@@ -213,7 +213,7 @@ function addon:BuildTooltipData()
     local itemId, itemData
     for itemId, itemData in pairs(MFH_DB_MOUNTS) do
         if not playerItems[itemData.spell_id] and (not itemData.faction or itemData.faction == playerFaction) then
-            local mountName, mountLink = GetItemInfo(itemId)
+            local itemName, itemLink = GetItemInfo(itemId)
 
             local itemSource
             for _, itemSource in pairs(itemData.from) do
@@ -287,7 +287,7 @@ function addon:BuildTooltipData()
 
                             npcData.sort = min(zoneData.sort, itemSource.for_sort)
 
-                            table.insert(npcData.items, { link = mountLink, mountIndex = mountIndexes[itemData.spell_id], comment = comment })
+                            table.insert(npcData.items, { link = itemLink, mountIndex = mountIndexes[itemData.spell_id], comment = comment })
                         end
                     end
                 end
@@ -368,8 +368,6 @@ end
 function addon:UpdateTooltipData(tooltip)
     local lineNo, itemTable
 
-    local zoneName = GetRealZoneText()
-
     for _, itemTable in pairs(self:BuildTooltipData()) do
         if not tableIsEmpty(itemTable.items) then
             if lineNo then
@@ -414,7 +412,7 @@ function addon:UpdateTooltipData(tooltip)
 
                 for _, firstName in pairs(firstSorted) do
                     local firstData = itemTable.items[firstName]
-                    local zoneColor = firstName == zoneName and COLOR_CURRENT_ZONE or COLOR_DUNGEON
+                    local zoneColor = firstData.isCurrent and COLOR_CURRENT_ZONE or COLOR_DUNGEON
 
                     local secondSorted, secondName, titlePrinted = {}
 
