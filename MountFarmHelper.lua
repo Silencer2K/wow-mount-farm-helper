@@ -80,17 +80,17 @@ function addon:OnInitialize()
 
     self.trackNpc = {}
 
-    local mountId, mountData
-    for mountId, mountData in pairs(MFH_DB_MOUNTS) do
-        GetItemInfo(mountId)
-        local mountSource
+    local itemId, itemData
+    for itemId, itemData in pairs(MFH_DB_MOUNTS) do
+        GetItemInfo(itemId)
+        local itemSource
 
-        for _, mountSource in pairs(mountData.from) do
-            if mountSource.npc_id then
-                self:GetNpcName(mountSource.npc_id)
+        for _, itemSource in pairs(itemData.from) do
+            if itemSource.npc_id then
+                self:GetNpcName(itemSource.npc_id)
 
-                if mountSource.type == 'raid' or (mountSource.type == 'dungeon' and mountSource.subtype) and not mountSource.dont_autoupdate then
-                    self.trackNpc[mountSource.npc_id] = 1
+                if itemSource.type == 'raid' or (itemSource.type == 'dungeon' and itemSource.subtype) and not itemSource.dont_autoupdate then
+                    self.trackNpc[itemSource.npc_id] = 1
                 end
             end
         end
@@ -170,14 +170,14 @@ end
 function addon:BuildTooltipData()
     local i, j
 
-    local mountIndexes, playerMounts = {}, {}
+    local mountIndexes, playerItems = {}, {}
     for i = 1, C_MountJournal.GetNumMounts() do
         local _, spellId, _, _, _, _, _, _, _, _, isCollected = C_MountJournal.GetMountInfo(i)
 
         mountIndexes[spellId] = i
 
         if isCollected then
-            playerMounts[spellId] = 1
+            playerItems[spellId] = 1
         end
     end
 
@@ -208,86 +208,86 @@ function addon:BuildTooltipData()
     local playerLevel = UnitLevel('player')
     local playerZoneName = GetRealZoneText()
 
-    local normalMounts, raidMounts, worldMounts, questMounts = {}, {}, {}, {}
+    local normalItems, raidItems, worldItems, questItems = {}, {}, {}, {}
 
-    local mountId, mountData
-    for mountId, mountData in pairs(MFH_DB_MOUNTS) do
-        if not playerMounts[mountData.spell_id] and (not mountData.faction or mountData.faction == playerFaction) then
-            local mountName, mountLink = GetItemInfo(mountId)
+    local itemId, itemData
+    for itemId, itemData in pairs(MFH_DB_MOUNTS) do
+        if not playerItems[itemData.spell_id] and (not itemData.faction or itemData.faction == playerFaction) then
+            local mountName, mountLink = GetItemInfo(itemId)
 
-            local mountSource
-            for _, mountSource in pairs(mountData.from) do
-                if not mountSource.faction or mountSource.faction == playerFaction then
-                    if mountSource.level <= playerLevel then
-                        local zoneName = GetMapNameByID(mountSource.zone_id)
+            local itemSource
+            for _, itemSource in pairs(itemData.from) do
+                if not itemSource.faction or itemSource.faction == playerFaction then
+                    if itemSource.level <= playerLevel then
+                        local zoneName = GetMapNameByID(itemSource.zone_id)
 
                         local npcName
-                        if mountSource.type == 'special' then
-                            npcName = L['special_' .. mountSource.subtype]
+                        if itemSource.type == 'special' then
+                            npcName = L['special_' .. itemSource.subtype]
                         else
-                            npcName = self:GetNpcName(mountSource.npc_id)
+                            npcName = self:GetNpcName(itemSource.npc_id)
                         end
 
-                        local raidSaveZone = MFH_DB_ZONES[mountSource.zone_id] and MFH_DB_ZONES[mountSource.zone_id].raid and LBZ[MFH_DB_ZONES[mountSource.zone_id].raid] or zoneName
-                        local raidSaveBoss = MFH_DB_BOSSES[mountSource.npc_id] and MFH_DB_BOSSES[mountSource.npc_id].raid and LBB[MFH_DB_BOSSES[mountSource.npc_id].raid] or npcName
+                        local raidSaveZone = MFH_DB_ZONES[itemSource.zone_id] and MFH_DB_ZONES[itemSource.zone_id].raid and LBZ[MFH_DB_ZONES[itemSource.zone_id].raid] or zoneName
+                        local raidSaveBoss = MFH_DB_BOSSES[itemSource.npc_id] and MFH_DB_BOSSES[itemSource.npc_id].raid and LBB[MFH_DB_BOSSES[itemSource.npc_id].raid] or npcName
 
                         local comment
-                        if mountSource.subtype and mountSource.type ~= 'special' then
-                            comment = L['type_' .. mountSource.subtype]
+                        if itemSource.subtype and itemSource.type ~= 'special' then
+                            comment = L['type_' .. itemSource.subtype]
                         end
-                        if mountSource.cond then
-                            comment = (comment and (comment .. ' + ') or '') .. L['cond_' .. mountSource.cond]
+                        if itemSource.cond then
+                            comment = (comment and (comment .. ' + ') or '') .. L['cond_' .. itemSource.cond]
                         end
 
                         local add
-                        if mountSource.type == 'dungeon' and not mountSource.subtype then
+                        if itemSource.type == 'dungeon' and not itemSource.subtype then
                             add = 1
-                        elseif mountSource.type == 'dungeon' or mountSource.type == 'raid' then
+                        elseif itemSource.type == 'dungeon' or itemSource.type == 'raid' then
                             add = not(savedRaids[raidSaveZone] and (type(savedRaids[raidSaveZone]) ~= 'table' or savedRaids[raidSaveZone][raidSaveBoss]))
-                        elseif mountSource.quest_id then
-                            add = not IsQuestFlaggedCompleted(mountSource.quest_id)
+                        elseif itemSource.quest_id then
+                            add = not IsQuestFlaggedCompleted(itemSource.quest_id)
                         end
 
                         if add then
                             local zoneData = {
-                                items = {}, sort = mountSource.for_sort,
-                                isCurrent = playerZoneName == (MFH_DB_ZONES[mountSource.zone_id] and MFH_DB_ZONES[mountSource.zone_id].map and LBZ[MFH_DB_ZONES[mountSource.zone_id].map] or zoneName),
+                                items = {}, sort = itemSource.for_sort,
+                                isCurrent = playerZoneName == (MFH_DB_ZONES[itemSource.zone_id] and MFH_DB_ZONES[itemSource.zone_id].map and LBZ[MFH_DB_ZONES[itemSource.zone_id].map] or zoneName),
                             }
 
-                            if mountSource.type == 'dungeon' and not mountSource.subtype then
-                                if normalMounts[zoneName] then
-                                    zoneData = normalMounts[zoneName]
+                            if itemSource.type == 'dungeon' and not itemSource.subtype then
+                                if normalItems[zoneName] then
+                                    zoneData = normalItems[zoneName]
                                 else
-                                    normalMounts[zoneName] = zoneData
+                                    normalItems[zoneName] = zoneData
                                 end
-                            elseif mountSource.type == 'dungeon' or mountSource.type == 'raid' then
-                                if raidMounts[zoneName] then
-                                    zoneData = raidMounts[zoneName]
+                            elseif itemSource.type == 'dungeon' or itemSource.type == 'raid' then
+                                if raidItems[zoneName] then
+                                    zoneData = raidItems[zoneName]
                                 else
-                                    raidMounts[zoneName] = zoneData
+                                    raidItems[zoneName] = zoneData
                                 end
-                            elseif mountSource.type == 'world' then
-                                if worldMounts[zoneName] then
-                                    zoneData = worldMounts[zoneName]
+                            elseif itemSource.type == 'world' then
+                                if worldItems[zoneName] then
+                                    zoneData = worldItems[zoneName]
                                 else
-                                    worldMounts[zoneName] = zoneData
+                                    worldItems[zoneName] = zoneData
                                 end
                             else
-                                if questMounts[zoneName] then
-                                    zoneData = questMounts[zoneName]
+                                if questItems[zoneName] then
+                                    zoneData = questItems[zoneName]
                                 else
-                                    questMounts[zoneName] = zoneData
+                                    questItems[zoneName] = zoneData
                                 end
                             end
 
-                            zoneData.sort = min(zoneData.sort, mountSource.for_sort)
+                            zoneData.sort = min(zoneData.sort, itemSource.for_sort)
 
-                            local npcData = zoneData.items[npcName] or { items = {}, sort = mountSource.for_sort }
+                            local npcData = zoneData.items[npcName] or { items = {}, sort = itemSource.for_sort }
                             zoneData.items[npcName] = npcData
 
-                            npcData.sort = min(zoneData.sort, mountSource.for_sort)
+                            npcData.sort = min(zoneData.sort, itemSource.for_sort)
 
-                            table.insert(npcData.items, { link = mountLink, mountIndex = mountIndexes[mountData.spell_id], comment = comment })
+                            table.insert(npcData.items, { link = mountLink, mountIndex = mountIndexes[itemData.spell_id], comment = comment })
                         end
                     end
                 end
@@ -296,37 +296,37 @@ function addon:BuildTooltipData()
     end
 
     return {
-        { items = normalMounts, title = 'normal' },
-        { items = raidMounts  , title = 'raid'   },
-        { items = worldMounts , title = 'world'  },
-        { items = questMounts , title = 'quest'  },
+        { items = normalItems, title = 'normal' },
+        { items = raidItems  , title = 'raid'   },
+        { items = worldItems , title = 'world'  },
+        { items = questItems , title = 'quest'  },
     }
 end
 
 function addon:BuildAltCraftList()
     local list, added = {}, {}
 
-    local itemId, data
-    for itemId, data in pairs(MFH_DB_MOUNTS) do
+    local itemId, itemData
+    for itemId, itemData in pairs(MFH_DB_MOUNTS) do
         local name, link, icon = unpackByIndex({ GetItemInfo(itemId) }, 1, 2, 10 )
 
-        local source
-        for _, source in pairs(data.from) do
-            local zoneName = GetMapNameByID(source.zone_id)
+        local itemSource
+        for _, itemSource in pairs(itemData.from) do
+            local zoneName = GetMapNameByID(itemSource.zone_id)
 
             local npcName
-            if source.type == 'special' then
-                npcName = L['special_' .. source.subtype]
+            if itemSource.type == 'special' then
+                npcName = L['special_' .. itemSource.subtype]
             else
-                npcName = self:GetNpcName(source.npc_id)
+                npcName = self:GetNpcName(itemSource.npc_id)
             end
 
             local comment
-            if source.subtype and source.type ~= 'special' then
-                comment = L['type_' .. source.subtype]
+            if itemSource.subtype and itemSource.type ~= 'special' then
+                comment = L['type_' .. itemSource.subtype]
             end
-            if source.cond then
-                comment = (comment and (comment .. ' + ') or '') .. L['cond_' .. source.cond]
+            if itemSource.cond then
+                comment = (comment and (comment .. ' + ') or '') .. L['cond_' .. itemSource.cond]
             end
 
             if added[itemId] then
@@ -334,7 +334,7 @@ function addon:BuildAltCraftList()
                     zone    = zoneName,
                     source  = npcName,
                     comment = comment,
-                    sort    = source.for_sort,
+                    sort    = itemSource.for_sort,
                 })
 
                 table.sort(added[itemId].sources, function(a, b) return a.sort < b.sort end)
@@ -346,12 +346,12 @@ function addon:BuildAltCraftList()
                     name    = name,
                     link    = link,
                     icon    = icon,
-                    sort    = source.for_sort,
+                    sort    = itemSource.for_sort,
                     sources = {{
                         zone    = zoneName,
                         source  = npcName,
                         comment = comment,
-                        sort    = source.for_sort,
+                        sort    = itemSource.for_sort,
                     }},
                 }
 
@@ -366,54 +366,54 @@ function addon:BuildAltCraftList()
 end
 
 function addon:UpdateTooltipData(tooltip)
-    local lineNo, mountTable
+    local lineNo, itemTable
 
     local zoneName = GetRealZoneText()
 
-    for _, mountTable in pairs(self:BuildTooltipData()) do
-        if not tableIsEmpty(mountTable.items) then
+    for _, itemTable in pairs(self:BuildTooltipData()) do
+        if not tableIsEmpty(itemTable.items) then
             if lineNo then
                 tooltip:AddSeparator(unpack(TOOLTIP_SEPARATOR))
             end
 
-            if self.db.profile['hide_' .. mountTable.title] then
+            if self.db.profile['hide_' .. itemTable.title] then
                 lineNo = tooltip:AddLine()
-                tooltip:SetCell(lineNo, 1, '|TInterface\\Buttons\\UI-PlusButton-Up:16|t' .. L['title_' .. mountTable.title], nil, nil, 4)
+                tooltip:SetCell(lineNo, 1, '|TInterface\\Buttons\\UI-PlusButton-Up:16|t' .. L['title_' .. itemTable.title], nil, nil, 4)
 
                 tooltip:SetLineScript(lineNo, 'OnMouseUp', function()
-                    self.db.profile['hide_' .. mountTable.title] = false
+                    self.db.profile['hide_' .. itemTable.title] = false
                     self:UpdateTooltip()
                 end)
             else
                 lineNo = tooltip:AddLine()
-                tooltip:SetCell(lineNo, 1, '|TInterface\\Buttons\\UI-MinusButton-Up:16|t' .. L['title_' .. mountTable.title], nil, nil, 4)
+                tooltip:SetCell(lineNo, 1, '|TInterface\\Buttons\\UI-MinusButton-Up:16|t' .. L['title_' .. itemTable.title], nil, nil, 4)
 
                 tooltip:SetLineScript(lineNo, 'OnMouseUp', function()
-                    self.db.profile['hide_' .. mountTable.title] = true
+                    self.db.profile['hide_' .. itemTable.title] = true
                     self:UpdateTooltip()
                 end)
 
                 local firstSorted, firstName = {}
 
-                for firstName in pairs(mountTable.items) do
+                for firstName in pairs(itemTable.items) do
                     table.insert(firstSorted, firstName)
                 end
 
                 table.sort(firstSorted, function(a, b)
-                    if mountTable.items[a].isCurrent then
-                        if mountTable.items[b].isCurrent then
-                            return mountTable.items[a].sort < mountTable.items[b].sort
+                    if itemTable.items[a].isCurrent then
+                        if itemTable.items[b].isCurrent then
+                            return itemTable.items[a].sort < itemTable.items[b].sort
                         end
                         return true
                     end
-                    if mountTable.items[b].isCurrent then
+                    if itemTable.items[b].isCurrent then
                         return false
                     end
-                    return mountTable.items[a].sort < mountTable.items[b].sort
+                    return itemTable.items[a].sort < itemTable.items[b].sort
                 end)
 
                 for _, firstName in pairs(firstSorted) do
-                    local firstData = mountTable.items[firstName]
+                    local firstData = itemTable.items[firstName]
                     local zoneColor = firstName == zoneName and COLOR_CURRENT_ZONE or COLOR_DUNGEON
 
                     local secondSorted, secondName, titlePrinted = {}
@@ -450,22 +450,22 @@ function addon:UpdateTooltipData(tooltip)
                             tooltip:SetCellTextColor(lineNo, 2, unpack(zoneColor))
                         end
 
-                        local mountData
-                        for _, mountData in pairs(secondData.items) do
+                        local itemData
+                        for _, itemData in pairs(secondData.items) do
                             lineNo = tooltip:AddLine()
 
-                            if mountData.comment then
-                                tooltip:SetCell(lineNo, 3, mountData.link:gsub('%[', ''):gsub('%]', ''))
+                            if itemData.comment then
+                                tooltip:SetCell(lineNo, 3, itemData.link:gsub('%[', ''):gsub('%]', ''))
 
-                                tooltip:SetCell(lineNo, 4, mountData.comment)
+                                tooltip:SetCell(lineNo, 4, itemData.comment)
                                 tooltip:SetCellTextColor(lineNo, 4, unpack(COLOR_COMMENT))
                             else
-                                tooltip:SetCell(lineNo, 3, mountData.link:gsub('%[', ''):gsub('%]', ''), nil, nil, 2)
+                                tooltip:SetCell(lineNo, 3, itemData.link:gsub('%[', ''):gsub('%]', ''), nil, nil, 2)
                             end
 
-                            if mountData.mountIndex then
+                            if itemData.mountIndex then
                                 tooltip:SetLineScript(lineNo, 'OnMouseUp', function()
-                                    self:OpenMountJournal(mountData.mountIndex)
+                                    self:OpenMountJournal(itemData.mountIndex)
                                 end)
                             end
                         end
@@ -503,23 +503,23 @@ function addon:OnGameTooltipSetItem(tooltip)
             tooltip:AddLine(' ')
             tooltip:AddLine(string.format('%s:', L.tooltip_source), unpack(COLOR_ITEM_TOOLTIP))
 
-            local source
-            for _, source in pairs(MFH_DB_MOUNTS[itemId].from) do
-                local zoneName = GetMapNameByID(source.zone_id)
+            local itemSource
+            for _, itemSource in pairs(MFH_DB_MOUNTS[itemId].from) do
+                local zoneName = GetMapNameByID(itemSource.zone_id)
 
                 local npcName
-                if source.type == 'special' then
-                    npcName = L['special_' .. source.subtype]
+                if itemSource.type == 'special' then
+                    npcName = L['special_' .. itemSource.subtype]
                 else
-                    npcName = self:GetNpcName(source.npc_id)
+                    npcName = self:GetNpcName(itemSource.npc_id)
                 end
 
                 local comment
-                if source.subtype and source.type ~= 'special' then
-                    comment = L['type_' .. source.subtype]
+                if itemSource.subtype and itemSource.type ~= 'special' then
+                    comment = L['type_' .. itemSource.subtype]
                 end
-                if source.cond then
-                    comment = (comment and (comment .. ' + ') or '') .. L['cond_' .. source.cond]
+                if itemSource.cond then
+                    comment = (comment and (comment .. ' + ') or '') .. L['cond_' .. itemSource.cond]
                 end
 
                 if comment then
