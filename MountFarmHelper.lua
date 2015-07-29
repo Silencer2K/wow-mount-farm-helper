@@ -7,7 +7,6 @@ local LBB = LibStub('LibBabble-Boss-3.0'):GetUnstrictLookupTable()
 local LBZ = LibStub('LibBabble-SubZone-3.0'):GetUnstrictLookupTable()
 
 local qtip = LibStub('LibQTip-1.0')
-local S2K = LibStub('S2KTools-1.0')
 
 local TOOLTIP_SEPARATOR     = { 1, 1, 1, 1, 0.5 }
 
@@ -133,7 +132,7 @@ function addon:OnCombatEvent(event, timeStamp, logEvent, hideCaster,
     destGuid, destName, destFlags, destFlags2, ...
 )
     if destGuid then
-        local type, id = S2K:UnitInfoFromGuid(destGuid)
+        local type, id = UnitInfoFromGuid(destGuid)
 
         if type == 'Creature' or type == 'Vehicle' then
             if (logEvent == 'UNIT_DIED' or logEvent == 'PARTY_KILL') and self.trackNpc[id] then
@@ -314,7 +313,7 @@ function addon:BuildAltCraftList()
 
     local itemId, itemData
     for itemId, itemData in pairs(MFH_DB_MOUNTS) do
-        local name, link, icon = unpackByIndex({ GetItemInfo(itemId) }, 1, 2, 10 )
+        local name, link, icon = table.select({ GetItemInfo(itemId) }, 1, 2, 10 )
 
         local itemSource
         for _, itemSource in pairs(itemData.from) do
@@ -360,7 +359,7 @@ function addon:UpdateTooltipData(tooltip)
     local lineNo, itemTable
 
     for _, itemTable in pairs(self:BuildTooltipData()) do
-        if not tableIsEmpty(itemTable.items) then
+        if not table.is_empty(itemTable.items) then
             if lineNo then
                 tooltip:AddSeparator(unpack(TOOLTIP_SEPARATOR))
             end
@@ -418,7 +417,7 @@ function addon:UpdateTooltipData(tooltip)
                     for _, secondName in pairs(secondSorted) do
                         local secondData = firstData.items[secondName]
 
-                        if tableLength(firstData.items) == 1 then
+                        if table.len(firstData.items) == 1 then
                             lineNo = tooltip:AddLine()
 
                             tooltip:SetCell(lineNo, 1, string.format('%s / %s', firstName, secondName), nil, nil, 4)

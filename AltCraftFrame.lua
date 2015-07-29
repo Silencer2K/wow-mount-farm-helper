@@ -63,7 +63,7 @@ end
 
 function frame.ListScroll:OnUpdate()
     local button
-    for button in valuesIterator(self.buttons) do
+    for button in table.values(self.buttons) do
         if button:IsMouseOver() then
             button.Highlight:Show()
 
@@ -107,7 +107,7 @@ function frame.ListScroll:Update()
                 button.Zone:SetText(item.sources[1].zone)
             end
 
-            local numSources = tableLength(item.sources)
+            local numSources = table.len(item.sources)
             if numSources > 1 then
                 button.Source:SetText(string.format("%s (+%d)", item.sources[1].source, numSources - 1))
             else
