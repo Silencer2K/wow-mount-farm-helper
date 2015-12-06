@@ -34,6 +34,10 @@ MFH_DB_BOSSES = {
     [69712] = { name = "Ji-Kun" },
     [71865] = { name = "Garrosh Hellscream" },
     [87493] = { name = "Rukhmar" },
+    [95044] = { name = "Terrorfist" },
+    [95053] = { name = "Deathtalon" },
+    [95054] = { name = "Vengeance" },
+    [95056] = { name = "Doomroller" },
 }
 
 MFH_DB_ZONES = {
@@ -510,6 +514,81 @@ MFH_DB_MOUNTS = {
                 type = 'world', quest_id = 37464, npc_id = 87493,
                 zone_id = 948,
                 level = 100, for_sort = 655,
+            },
+        },
+    },
+    [116658] = { -- Tundra Icehoof
+        spell_id = 171619,
+        from = {
+            {
+                type = 'world', quest_id = 39288, npc_id = 95044,
+                zone_id = 970,
+                level = 100, for_sort = 675,
+            },
+            {
+                type = 'world', quest_id = 39288, npc_id = 95053,
+                zone_id = 970,
+                level = 100, for_sort = 675,
+            },
+            {
+                type = 'world', quest_id = 39290, npc_id = 95054,
+                zone_id = 970,
+                level = 100, for_sort = 675,
+            },
+            {
+                type = 'world', quest_id = 39289, npc_id = 95056,
+                zone_id = 970,
+                level = 100, for_sort = 675,
+            },
+        },
+    },
+    [116669] = { -- Armored Razorback
+        spell_id = 171630,
+        from = {
+            {
+                type = 'world', quest_id = 39288, npc_id = 95044,
+                zone_id = 970,
+                level = 100, for_sort = 675,
+            },
+            {
+                type = 'world', quest_id = 39288, npc_id = 95053,
+                zone_id = 970,
+                level = 100, for_sort = 675,
+            },
+            {
+                type = 'world', quest_id = 39290, npc_id = 95054,
+                zone_id = 970,
+                level = 100, for_sort = 675,
+            },
+            {
+                type = 'world', quest_id = 39289, npc_id = 95056,
+                zone_id = 970,
+                level = 100, for_sort = 675,
+            },
+        },
+    },
+    [116780] = { -- Warsong Direfang
+        spell_id = 171837,
+        from = {
+            {
+                type = 'world', quest_id = 39288, npc_id = 95044,
+                zone_id = 970,
+                level = 100, for_sort = 675,
+            },
+            {
+                type = 'world', quest_id = 39288, npc_id = 95053,
+                zone_id = 970,
+                level = 100, for_sort = 675,
+            },
+            {
+                type = 'world', quest_id = 39290, npc_id = 95054,
+                zone_id = 970,
+                level = 100, for_sort = 675,
+            },
+            {
+                type = 'world', quest_id = 39289, npc_id = 95056,
+                zone_id = 970,
+                level = 100, for_sort = 675,
             },
         },
     },
