@@ -526,7 +526,7 @@ MFH_DB_MOUNTS = {
                 level = 100, for_sort = 675,
             },
             {
-                type = 'world', quest_id = 39288, npc_id = 95053,
+                type = 'world', quest_id = 39287, npc_id = 95053,
                 zone_id = 970,
                 level = 100, for_sort = 675,
             },
@@ -551,7 +551,7 @@ MFH_DB_MOUNTS = {
                 level = 100, for_sort = 675,
             },
             {
-                type = 'world', quest_id = 39288, npc_id = 95053,
+                type = 'world', quest_id = 39287, npc_id = 95053,
                 zone_id = 970,
                 level = 100, for_sort = 675,
             },
@@ -576,7 +576,7 @@ MFH_DB_MOUNTS = {
                 level = 100, for_sort = 675,
             },
             {
-                type = 'world', quest_id = 39288, npc_id = 95053,
+                type = 'world', quest_id = 39287, npc_id = 95053,
                 zone_id = 970,
                 level = 100, for_sort = 675,
             },
