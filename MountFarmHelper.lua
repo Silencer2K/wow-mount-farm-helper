@@ -191,25 +191,28 @@ function addon:GetItemSourceInfo(itemSource)
 end
 
 function addon:GetPlayerItems()
-    local playerItems, mountIndexes = {}, {}
+    local playerItems, mountIds = {}, {}
 
-    for i = 1, C_MountJournal.GetNumMounts() do
-        local _, spellId, _, _, _, _, _, _, _, _, isCollected = C_MountJournal.GetMountInfo(i)
+    local allMounts = C_MountJournal.GetMountIDs()
 
-        mountIndexes[spellId] = i
+    local mountId
+    for _, mountId in pairs(allMounts) do
+        local _, spellId, _, _, _, _, _, _, _, _, isCollected = C_MountJournal.GetMountInfoByID(mountId)
+
+        mountIds[spellId] = mountId
 
         if isCollected then
             playerItems[spellId] = 1
         end
     end
 
-    return playerItems, mountIndexes
+    return playerItems, mountIds
 end
 
 function addon:BuildTooltipData()
     local i, j
 
-    local playerItems, mountIndexes = self:GetPlayerItems()
+    local playerItems, mountIds = self:GetPlayerItems()
 
     local savedRaids = {}
     for i = 1, GetNumSavedInstances() do
@@ -299,7 +302,7 @@ function addon:BuildTooltipData()
 
                             npcData.sort = min(zoneData.sort, itemSource.for_sort)
 
-                            table.insert(npcData.items, { link = itemLink, mountIndex = mountIndexes[itemData.spell_id], comment = comment })
+                            table.insert(npcData.items, { link = itemLink, spellId = itemData.spell_id, mountId = mountIds[itemData.spell_id], comment = comment })
                         end
                     end
                 end
@@ -318,7 +321,7 @@ end
 function addon:BuildAltCraftList()
     local list, added = {}, {}
 
-    local playerItems, mountIndexes = self:GetPlayerItems()
+    local playerItems, mountIds = self:GetPlayerItems()
     local playerFaction = string.lower(UnitFactionGroup('player'))
 
     local itemId, itemData
@@ -465,9 +468,9 @@ function addon:UpdateTooltipData(tooltip)
                                 tooltip:SetCell(lineNo, 3, itemData.link:gsub('%[', ''):gsub('%]', ''), nil, nil, 2)
                             end
 
-                            if itemData.mountIndex then
+                            if itemData.mountId then
                                 tooltip:SetLineScript(lineNo, 'OnMouseUp', function()
-                                    self:OpenMountJournal(itemData.mountIndex)
+                                    self:OpenMountJournal(itemData.mountId, itemData.spellId)
                                 end)
                             end
                         end
@@ -480,15 +483,22 @@ function addon:UpdateTooltipData(tooltip)
     tooltip:AddLine()
 end
 
-function addon:OpenMountJournal(index)
+function addon:OpenMountJournal(mountId, spellId)
     if not CollectionsJournal:IsShown() then
         ToggleCollectionsJournal()
     end
 
     CollectionsJournal_SetTab(CollectionsJournal, 1)
 
-    if index then
-        MountJournal_Select(index)
+    if mountId then
+        MountJournal.selectedMountID = mountId
+        MountJournal.selectedSpellID = spellId
+
+        MountJournal_HideMountDropdown()
+        MountJournal_UpdateMountList()
+        MountJournal_UpdateMountDisplay()
+    else
+        MountJournal_Select(1)
     end
 end
 
