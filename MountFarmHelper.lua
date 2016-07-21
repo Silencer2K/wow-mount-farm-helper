@@ -62,6 +62,12 @@ function addon:OnInitialize()
         addon:OnCombatEvent(...)
     end)
 
+    self:RegisterEvent('PLAYER_LOGIN', function(...)
+        if not MountJournal_OnLoad then
+            UIParentLoadAddOn('Blizzard_Collections')
+        end
+    end)
+
     GameTooltip:HookScript('OnTooltipCleared', function(self)
         addon:OnGameTooltipCleared(self)
     end)
@@ -72,10 +78,6 @@ function addon:OnInitialize()
 
     LibStub('AceConfig-3.0'):RegisterOptionsTable(addonName, self:GetOptions())
     LibStub('AceConfigDialog-3.0'):AddToBlizOptions(addonName, addonName, nil)
-
-    if not MountJournal_OnLoad then
-        UIParentLoadAddOn('Blizzard_Collections')
-    end
 
     self.trackNpc = {}
 
