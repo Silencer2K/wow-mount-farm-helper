@@ -149,7 +149,7 @@ function addon:OnCombatEvent(event, timeStamp, logEvent, hideCaster,
 end
 
 function addon:UpdateTooltip(anchor)
-    if not InCombatLockdown() then
+    if not InCombatLockdown() and not (self.tooltip and self.tooltip:IsShown()) then
         if qtip:IsAcquired('MountFarmHelper') and self.tooltip then
             self.tooltip:Clear()
         else
