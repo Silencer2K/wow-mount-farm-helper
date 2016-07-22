@@ -154,6 +154,10 @@ function addon:UpdateTooltip(anchor)
             self.tooltip:Clear()
         else
             self.tooltip = qtip:Acquire('MountFarmHelper', 5, 'LEFT', 'LEFT', 'LEFT', 'RIGHT')
+
+            self.tooltip.OnRelease = function()
+                self.tooltip = nil
+            end
         end
 
         self:UpdateTooltipData(self.tooltip)
