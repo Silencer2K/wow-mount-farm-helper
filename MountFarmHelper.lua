@@ -253,6 +253,7 @@ function addon:BuildTooltipData()
     for itemId, itemData in pairs(MFH_DB_MOUNTS) do
         if not playerItems[itemData.spell_id] and (not itemData.faction or itemData.faction == playerFaction) then
             local itemName, itemLink = GetItemInfo(itemId)
+            local dispName = (itemLink and itemLink:gsub('%[', ''):gsub('%]', ''):sub(1)) or itemName or string.format('item#%d', itemId)
 
             local itemSource
             for _, itemSource in pairs(itemData.from) do
@@ -308,7 +309,7 @@ function addon:BuildTooltipData()
 
                             npcData.sort = min(zoneData.sort, itemSource.for_sort)
 
-                            table.insert(npcData.items, { link = itemLink, spellId = itemData.spell_id, mountId = mountIds[itemData.spell_id], comment = comment })
+                            table.insert(npcData.items, { name = dispName, spellId = itemData.spell_id, mountId = mountIds[itemData.spell_id], comment = comment })
                         end
                     end
                 end
@@ -466,12 +467,12 @@ function addon:UpdateTooltipData(tooltip)
                             lineNo = tooltip:AddLine()
 
                             if itemData.comment then
-                                tooltip:SetCell(lineNo, 3, itemData.link:gsub('%[', ''):gsub('%]', ''))
+                                tooltip:SetCell(lineNo, 3, string.format("%-40s", itemData.name))
 
                                 tooltip:SetCell(lineNo, 4, itemData.comment)
                                 tooltip:SetCellTextColor(lineNo, 4, unpack(COLOR_COMMENT))
                             else
-                                tooltip:SetCell(lineNo, 3, itemData.link:gsub('%[', ''):gsub('%]', ''), nil, nil, 2)
+                                tooltip:SetCell(lineNo, 3, string.format("%-40s", itemData.name), nil, nil, 2)
                             end
 
                             if itemData.mountId then
