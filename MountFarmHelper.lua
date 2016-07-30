@@ -37,7 +37,7 @@ function addon:OnInitialize()
         icon = 'Interface\\ICONS\\ABILITY_MOUNT_GOLDENGRYPHON',
         label = "Mount Farm Helper",
         OnEnter = function(...)
-            self:UpdateTooltip(...)
+            self:ShowTooltip(...)
         end,
         OnLeave = function()
         end,
@@ -148,27 +148,22 @@ function addon:OnCombatEvent(event, timeStamp, logEvent, hideCaster,
     end
 end
 
-function addon:UpdateTooltip(anchor)
-    if not InCombatLockdown() and not (self.tooltip and self.tooltip:IsShown()) then
-        if qtip:IsAcquired('MountFarmHelper') and self.tooltip then
-            self.tooltip:Clear()
-        else
-            self.tooltip = qtip:Acquire('MountFarmHelper', 5, 'LEFT', 'LEFT', 'LEFT', 'RIGHT')
+function addon:ShowTooltip(anchor)
+    if not (InCombatLockdown() or (self.tooltip and self.tooltip:IsShown())) then
+        if not (qtip:IsAcquired(addonName) and self.tooltip) then
+            self.tooltip = qtip:Acquire(addonName, 5, 'LEFT', 'LEFT', 'LEFT', 'RIGHT')
 
             self.tooltip.OnRelease = function()
                 self.tooltip = nil
             end
         end
 
-        self:UpdateTooltipData(self.tooltip)
-
         if anchor then
             self.tooltip:SmartAnchorTo(anchor)
             self.tooltip:SetAutoHideDelay(0.05, anchor)
         end
 
-        self.tooltip:UpdateScrolling()
-        self.tooltip:Show()
+        self:UpdateTooltip(self.tooltip)
     end
 end
 
@@ -379,7 +374,9 @@ function addon:BuildAltCraftList()
     return list
 end
 
-function addon:UpdateTooltipData(tooltip)
+function addon:UpdateTooltip(tooltip)
+    tooltip:Clear()
+
     local lineNo, itemTable
 
     for _, itemTable in pairs(self:BuildTooltipData()) do
@@ -394,7 +391,7 @@ function addon:UpdateTooltipData(tooltip)
 
                 tooltip:SetLineScript(lineNo, 'OnMouseUp', function()
                     self.db.profile['hide_' .. itemTable.title] = false
-                    self:UpdateTooltip()
+                    self:UpdateTooltip(tooltip)
                 end)
             else
                 lineNo = tooltip:AddLine()
@@ -402,7 +399,7 @@ function addon:UpdateTooltipData(tooltip)
 
                 tooltip:SetLineScript(lineNo, 'OnMouseUp', function()
                     self.db.profile['hide_' .. itemTable.title] = true
-                    self:UpdateTooltip()
+                    self:UpdateTooltip(tooltip)
                 end)
 
                 local firstSorted, firstName = {}
@@ -487,7 +484,10 @@ function addon:UpdateTooltipData(tooltip)
         end
     end
 
-    tooltip:AddLine()
+    tooltip:AddLine("")
+
+    tooltip:UpdateScrolling()
+    tooltip:Show()
 end
 
 function addon:OpenMountJournal(mountId, spellId)
