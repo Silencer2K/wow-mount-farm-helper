@@ -2,7 +2,7 @@
 ## Title: Mount Farm Helper
 ## Author: silencer2k@gmail.com
 ## SavedVariables: MountFarmHelperDB
-## Version: 2.0
+## Version: 7.0.3
 
 MountFarmHelper.xml
 
@@ -21,8 +21,4 @@ locales\zhTW.lua
 
 MountsDB.lua
 MountFarmHelper.lua
-
 Config.lua
-
-AltCraftFrame.xml
-AltCraftFrame.lua
