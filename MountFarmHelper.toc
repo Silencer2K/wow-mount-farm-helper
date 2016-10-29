@@ -2,7 +2,7 @@
 ## Title: Mount Farm Helper
 ## Author: silencer2k@gmail.com
 ## SavedVariables: MountFarmHelperDB
-## Version: 2.0
+## Version: 7.1.0
 
 MountFarmHelper.xml
 
